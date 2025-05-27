@@ -51,35 +51,8 @@ interface StatementGeneratable {
             // Index is start from 1
             index++;
 
-            // Handle parameter type that not supported null setter
-            if (param.isNull() && !param.getParamType().isNonPrimitive()) {
-                statement.setNull(index, param.getParamType().getSqlType());
-                continue;
-            }
-
             // Handle parameter with designed type
-            switch (param.getParamType()) {
-                case DOUBLE:
-                    statement.setDouble(index, param.getDoubleValue());
-                    break;
-                case INTEGER:
-                    statement.setInt(index, param.getIntegerValue());
-                    break;
-                case LONG:
-                    statement.setLong(index, param.getLongValue());
-                    break;
-                case STRING:
-                    statement.setString(index, param.getStrValue());
-                    break;
-                case DATE:
-                    statement.setDate(index, param.getDateValue());
-                    break;
-                case DATETIME:
-                    statement.setTimestamp(index, param.getTimestampValue());
-                    break;
-                default:
-                    break;
-            }
+            statement = param.apply(statement, index);
         }
 
         return statement;

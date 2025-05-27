@@ -37,7 +37,7 @@ public class PreparedStatementFiller {
         // Loop through all parameters
         for (SQLParameter param : params) {
             // Replace question mark character
-            sql = sql.replaceFirst("\\?", param.getValueAsSQL());
+            sql = sql.replaceFirst("\\?", param.toDebugSQL());
         }
 
         return sql;

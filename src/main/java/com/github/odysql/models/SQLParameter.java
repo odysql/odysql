@@ -1,86 +1,29 @@
 package com.github.odysql.models;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+
+import com.github.odysql.helpers.SQLTypesMapper;
 
 /** Class for store value and type, to help create prepared statements. */
 public class SQLParameter {
 
-    private final SQLParameterType paramType;
-    private final boolean isNull;
-
-    private String strValue = "";
-    private Integer integerValue = 0;
-    private Long longValue = (long) 0;
-    private Double doubleValue = 0.0;
-    private Date dateValue = null;
-    private Timestamp timestampValue = null;
+    private final Class<?> clazz;
+    private final Object value;
 
     /**
-     * Create a new SQL Parameter with given string value.
+     * Create a new SQL Parameter with given class and value.
      * 
-     * @param value value of string, can be <code>null</code>
+     * @param <ValueT> type of value
+     * @param clazz    class of given value
+     * @param value    value of string, can be <code>null</code>
      */
-    private SQLParameter(String value) {
-        this.paramType = SQLParameterType.STRING;
-        this.strValue = value;
-        this.isNull = (value == null);
-    }
-
-    /**
-     * Create a new SQL Parameter with given integer value.
-     * 
-     * @param value value of integer, can be <code>null</code>
-     */
-    private SQLParameter(Integer value) {
-        this.paramType = SQLParameterType.INTEGER;
-        this.integerValue = value;
-        this.isNull = (value == null);
-    }
-
-    /**
-     * Create a new SQL Parameter with given long value.
-     * 
-     * @param value value of long, can be <code>null</code>
-     */
-    private SQLParameter(Long value) {
-        this.paramType = SQLParameterType.LONG;
-        this.longValue = value;
-        this.isNull = (value == null);
-    }
-
-    /**
-     * Create a new SQL Parameter with given double value.
-     * 
-     * @param value value of double, can be <code>null</code>
-     */
-    private SQLParameter(Double value) {
-        this.paramType = SQLParameterType.DOUBLE;
-        this.doubleValue = value;
-        this.isNull = (value == null);
-    }
-
-    /**
-     * Create a new SQL Parameter with given java.sql.Date value.
-     * 
-     * @param value value of java.sql.Date, can be <code>null</code>
-     */
-    private SQLParameter(Date value) {
-        this.paramType = SQLParameterType.DATE;
-        this.dateValue = value;
-        this.isNull = (value == null);
-    }
-
-    /**
-     * Create a new SQL Parameter with given java.sql.Timestamp value.
-     * 
-     * @param value value of timestamp, can be <code>null</code>
-     */
-    private SQLParameter(Timestamp value) {
-        this.paramType = SQLParameterType.DATETIME;
-        this.timestampValue = value;
-        this.isNull = (value == null);
+    private <ValueT> SQLParameter(Class<ValueT> clazz, ValueT value) {
+        this.clazz = clazz;
+        this.value = value;
     }
 
     // ========================= Static Getter =========================
@@ -92,17 +35,17 @@ public class SQLParameter {
      * @return SQL Parameter of integer value
      */
     public static SQLParameter of(Integer value) {
-        return new SQLParameter(value);
+        return new SQLParameter(Integer.class, value);
     }
 
     /**
-     * Create a new SQL Parameter with given double value.
+     * Create a new SQL Parameter with given long value.
      * 
-     * @param value value of double, can be <code>null</code>
+     * @param value value of long, can be <code>null</code>
      * @return SQL Parameter of long value
      */
     public static SQLParameter of(Long value) {
-        return new SQLParameter(value);
+        return new SQLParameter(Long.class, value);
     }
 
     /**
@@ -112,7 +55,7 @@ public class SQLParameter {
      * @return SQL Parameter of double value
      */
     public static SQLParameter of(Double value) {
-        return new SQLParameter(value);
+        return new SQLParameter(Double.class, value);
     }
 
     /**
@@ -122,7 +65,7 @@ public class SQLParameter {
      * @return SQL Parameter of given string value
      */
     public static SQLParameter of(String str) {
-        return new SQLParameter(str);
+        return new SQLParameter(String.class, str);
     }
 
     /**
@@ -132,7 +75,7 @@ public class SQLParameter {
      * @return SQL Parameter of given java.sql.Date value
      */
     public static SQLParameter of(Date sqlDate) {
-        return new SQLParameter(sqlDate);
+        return new SQLParameter(Date.class, sqlDate);
     }
 
     /**
@@ -142,18 +85,7 @@ public class SQLParameter {
      * @return SQL Parameter of given java.sql.Timestamp value
      */
     public static SQLParameter of(Timestamp timestamp) {
-        return new SQLParameter(timestamp);
-    }
-
-    // -------------------- Getter & Setters ----------------------
-
-    /**
-     * Get parameter type of this parameter object.
-     * 
-     * @return parameter type, never null
-     */
-    public SQLParameterType getParamType() {
-        return paramType;
+        return new SQLParameter(Timestamp.class, timestamp);
     }
 
     /**
@@ -162,61 +94,16 @@ public class SQLParameter {
      * @return true if object content is <code>null</code>, false otherwise
      */
     public boolean isNull() {
-        return this.isNull;
+        return value == null;
     }
 
     /**
-     * Get string value stored inside this parameter object..
+     * Get value stored in this container. Please note this not ensure type safety.
      * 
-     * @return string value if any
+     * @return value stored in this parameter
      */
-    public String getStrValue() {
-        return strValue;
-    }
-
-    /**
-     * Get integer value stored inside this parameter object..
-     * 
-     * @return integer value if any
-     */
-    public Integer getIntegerValue() {
-        return integerValue;
-    }
-
-    /**
-     * Get long value stored inside this parameter object..
-     * 
-     * @return long value if any
-     */
-    public Long getLongValue() {
-        return longValue;
-    }
-
-    /**
-     * Get double value stored inside this parameter object..
-     * 
-     * @return double value if any
-     */
-    public Double getDoubleValue() {
-        return doubleValue;
-    }
-
-    /**
-     * Get date value stored inside this parameter object..
-     * 
-     * @return date value if any
-     */
-    public Date getDateValue() {
-        return dateValue;
-    }
-
-    /**
-     * Get timestamp value stored inside this parameter object..
-     * 
-     * @return timestamp value if any
-     */
-    public Timestamp getTimestampValue() {
-        return timestampValue;
+    public Object getValue() {
+        return value;
     }
 
     // ------------------ Special SQL Getters ------------------------------
@@ -231,38 +118,112 @@ public class SQLParameter {
      * 
      * @return string representation of actual value, in SQL format
      */
-    public String getValueAsSQL() {
+    public String toDebugSQL() {
         // Null value handling
-        if (isNull) {
+        if (this.isNull()) {
             return "NULL";
         }
 
-        switch (this.paramType) {
-            case DOUBLE:
-                return String.valueOf(doubleValue);
-            case INTEGER:
-                return String.valueOf(integerValue);
-            case LONG:
-                return String.valueOf(longValue);
-
-            case DATE:
-                // Use single quotes for sql date format
-                return "'" + dateValue.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "'";
-
-            case DATETIME:
-                // Use single quotes for sql datetime format
-                return "'"
-                        + timestampValue
-                                .toLocalDateTime()
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                        + "'";
-
-            case STRING:
-                // Add single quotes as sql string format
-                return "'" + this.strValue + "'";
-
-            default:
-                throw new IllegalArgumentException("Unsupported type detected");
+        if (this.clazz == Double.class) {
+            return String.valueOf(this.value);
         }
+
+        if (this.clazz == Integer.class) {
+            return String.valueOf(this.value);
+        }
+
+        if (this.clazz == Long.class) {
+            return String.valueOf(this.value);
+        }
+
+        if (this.clazz == Date.class) {
+            Date dateValue = (Date) this.value;
+
+            // Use single quotes for sql date format
+            return "'" + dateValue.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "'";
+        }
+
+        if (this.clazz == Timestamp.class) {
+            Timestamp timestampValue = (Timestamp) this.value;
+
+            // Use single quotes for sql datetime format
+            return "'"
+                    + timestampValue
+                            .toLocalDateTime()
+                            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    + "'";
+        }
+
+        if (this.clazz == String.class) {
+            // Add single quotes as sql string format
+            return "'" + this.value + "'";
+        }
+
+        throw new IllegalArgumentException("Unsupported type detected");
+    }
+
+    /**
+     * Apply current SQL parameter value to given prepared statement.
+     * 
+     * @param statement prepared statement to be fill
+     * @param index     index for current parameter, start from 1
+     * @return filled prepared statement
+     * @throws SQLException             when failed to set data
+     * @throws IllegalArgumentException when statement is null, or index less or
+     *                                  equal to zero
+     */
+    public PreparedStatement apply(PreparedStatement statement, int index)
+            throws SQLException, IllegalArgumentException {
+
+        // Prevent statement & index invalid
+        if (statement == null) {
+            throw new IllegalArgumentException("Statement cannot be null");
+        }
+
+        if (index <= 0) {
+            throw new IllegalArgumentException("Invalid index: " + index);
+        }
+
+        // -----------------------------------------------------
+
+        // Primitive type with null value that PreparedStatement not supported setter
+        if (this.isNull() && SQLTypesMapper.isPrimitive(this.clazz)) {
+            statement.setNull(index, SQLTypesMapper.toSQLTypes(this.clazz));
+            return statement;
+        }
+
+        // Handle parameter with designed type
+        if (this.clazz == Double.class) {
+            statement.setDouble(index, (double) this.value);
+            return statement;
+        }
+
+        if (this.clazz == Integer.class) {
+            statement.setInt(index, (int) this.value);
+            return statement;
+        }
+
+        if (this.clazz == Long.class) {
+            statement.setLong(index, (long) this.value);
+            return statement;
+        }
+
+        if (this.clazz == Date.class) {
+            statement.setDate(index, (Date) this.value);
+            return statement;
+        }
+
+        if (this.clazz == Timestamp.class) {
+            statement.setTimestamp(index, (Timestamp) this.value);
+            return statement;
+
+        }
+
+        if (this.clazz == String.class) {
+            statement.setString(index, (String) this.value);
+            return statement;
+        }
+
+        throw new IllegalStateException("Cannot apply sql parameter with type " + this.clazz + " to statement.");
     }
 }
