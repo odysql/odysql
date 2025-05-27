@@ -9,7 +9,7 @@ import com.github.odysql.models.SQLJoinData;
 import com.github.odysql.models.SQLParameter;
 
 /** The SQL builder that specified design for SELECT. */
-public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
+public class SQLSelectBuilder implements StatementGeneratable, Conditionable<SQLSelectBuilder> {
     /** The column name to be select */
     private List<String> selectCols = new ArrayList<>();
 
