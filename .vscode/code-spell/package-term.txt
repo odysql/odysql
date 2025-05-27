@@ -1,2 +1,4 @@
 # Dictionary Words For Package Name/Font
+Conditionable
+Generatable
 odysql
