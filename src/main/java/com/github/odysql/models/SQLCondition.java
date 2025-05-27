@@ -206,7 +206,6 @@ public class SQLCondition implements SQLFragment {
      * 
      * @param condition the condition to be bracketed
      * @return condition that is bracketed, e.g. <code>(column1 = column2)</code>
-     * @see #bracket()
      */
     public static SQLCondition bracket(SQLCondition condition) {
         return new SQLCondition("(" + condition.sql + ")");

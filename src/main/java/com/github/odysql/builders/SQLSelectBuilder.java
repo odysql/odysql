@@ -64,6 +64,11 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
     /** The value of FETCH FIRST ROWS ONLY. Default row is null. */
     private Integer fetchRow = null;
 
+    /** Create a new SQL Select Builder, which is start point fo fluent API. */
+    public SQLSelectBuilder() {
+        // Default constructor
+    }
+
     /**
      * Specific a column to be select in constructed query.
      * 

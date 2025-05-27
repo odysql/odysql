@@ -147,34 +147,74 @@ public class SQLParameter {
 
     // -------------------- Getter & Setters ----------------------
 
+    /**
+     * Get parameter type of this parameter object.
+     * 
+     * @return parameter type, never null
+     */
     public SQLParameterType getParamType() {
         return paramType;
     }
 
+    /**
+     * Check if content of this parameter object is <code>null</code>.
+     * 
+     * @return true if object content is <code>null</code>, false otherwise
+     */
     public boolean isNull() {
         return this.isNull;
     }
 
+    /**
+     * Get string value stored inside this parameter object..
+     * 
+     * @return string value if any
+     */
     public String getStrValue() {
         return strValue;
     }
 
+    /**
+     * Get integer value stored inside this parameter object..
+     * 
+     * @return integer value if any
+     */
     public Integer getIntegerValue() {
         return integerValue;
     }
 
+    /**
+     * Get long value stored inside this parameter object..
+     * 
+     * @return long value if any
+     */
     public Long getLongValue() {
         return longValue;
     }
 
+    /**
+     * Get double value stored inside this parameter object..
+     * 
+     * @return double value if any
+     */
     public Double getDoubleValue() {
         return doubleValue;
     }
 
+    /**
+     * Get date value stored inside this parameter object..
+     * 
+     * @return date value if any
+     */
     public Date getDateValue() {
         return dateValue;
     }
 
+    /**
+     * Get timestamp value stored inside this parameter object..
+     * 
+     * @return timestamp value if any
+     */
     public Timestamp getTimestampValue() {
         return timestampValue;
     }

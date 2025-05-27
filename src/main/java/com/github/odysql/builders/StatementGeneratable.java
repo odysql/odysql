@@ -87,7 +87,8 @@ interface StatementGeneratable {
 
     /**
      * Get a filled Prepared Statement with the value that already store in the
-     * builder, with {@link #toSQL()} used as SQL.
+     * builder, with {@link com.github.odysql.builders.StatementGeneratable#toSQL()}
+     * used as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fillStatement(PreparedStatement)}
@@ -105,7 +106,8 @@ interface StatementGeneratable {
 
     /**
      * Get a filled Prepared Statement with the value that already store in the
-     * builder, with {@link #toSQL()} used as SQL.
+     * builder, with{@link com.github.odysql.builders.StatementGeneratable#toSQL()}
+     * used as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fillStatement(PreparedStatement)}.
