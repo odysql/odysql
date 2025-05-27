@@ -11,40 +11,34 @@ import com.github.odysql.models.SQLParameter;
 /** The SQL builder that specified design for SELECT. */
 public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
     /** The column name to be select */
-    private ArrayList<String> selectCols = new ArrayList<>();
+    private List<String> selectCols = new ArrayList<>();
 
     /**
      * The column name to use ORDER BY, which the order will affect the final query.
      * There will not have any checking syntax correctness.
      */
-    private ArrayList<String> orderCols = new ArrayList<>();
+    private List<String> orderCols = new ArrayList<>();
 
     /**
      * The column name to use GROUP BY. There will not have any checking syntax
      * correctness.
      */
-    private ArrayList<String> groupCols = new ArrayList<>();
+    private List<String> groupCols = new ArrayList<>();
 
     /** Stored record for JOIN. Support LEFT JOIN .etc. */
-    private ArrayList<SQLJoinData> joinedTables = new ArrayList<>();
+    private List<SQLJoinData> joinedTables = new ArrayList<>();
 
     /** The condition for WHERE clause. */
     private SQLCondition whereCondition = null;
 
     /** Condition parameters. */
-    private ArrayList<SQLParameter> conditionParam = new ArrayList<>();
+    private List<SQLParameter> conditionParam = new ArrayList<>();
 
     /** Stored query for WITH table syntax. */
-    private ArrayList<String> withTables = new ArrayList<>();
+    private List<String> withTables = new ArrayList<>();
 
     /** Condition parameters in WITH syntax. */
-    private ArrayList<SQLParameter> withParam = new ArrayList<>();
-
-    /**
-     * Determine to select every column. Set this value to true, will ignore the
-     * <code>columns</code> setting.
-     */
-    private boolean selectAll = false;
+    private List<SQLParameter> withParam = new ArrayList<>();
 
     /**
      * The primary table name, which is not the table to join. Developer should
@@ -64,10 +58,14 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
     /** The value of FETCH FIRST ROWS ONLY. Default row is null. */
     private Integer fetchRow = null;
 
+    // ==================================================================
+
     /** Create a new SQL Select Builder, which is start point fo fluent API. */
     public SQLSelectBuilder() {
         // Default constructor
     }
+
+    // ==================================================================
 
     /**
      * Specific a column to be select in constructed query.
@@ -239,6 +237,16 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
         return this;
     }
 
+    @Override
+    public List<SQLParameter> getParams() {
+        // Get parameters list, with first, then condition
+        List<SQLParameter> paramList = new ArrayList<>();
+        paramList.addAll(withParam);
+        paramList.addAll(conditionParam);
+
+        return paramList;
+    }
+
     // ======================= Statement Generable ===================
 
     @Override
@@ -260,11 +268,7 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
         }
 
         // Column to be select
-        if (this.selectAll) {
-            builder.append("* ");
-        } else {
-            builder.append(String.join(", ", this.selectCols));
-        }
+        builder.append(String.join(", ", this.selectCols));
 
         // FROM
         builder.append(" FROM " + this.mainTable);
@@ -305,20 +309,5 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable {
 
         // Remove exceed space and Return final query
         return builder.toString().replace("  ", " ");
-    }
-
-    /**
-     * Get list that includes all parameters, include WHERE and WITH parameters.
-     * 
-     * @return List of SQLParameter in this builder
-     */
-    @Override
-    public List<SQLParameter> getParams() {
-        // Get parameters list, with first, then condition
-        ArrayList<SQLParameter> paramList = new ArrayList<>();
-        paramList.addAll(withParam);
-        paramList.addAll(conditionParam);
-
-        return paramList;
     }
 }
