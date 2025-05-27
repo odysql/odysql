@@ -1,0 +1,2 @@
+# Dictionary Words For Package Name/Font
+odysql

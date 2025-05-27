@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "adpyke.vscode-sql-formatter",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+    ]
+}

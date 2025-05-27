@@ -1,0 +1,48 @@
+{
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[sql]": {
+        "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+    },
+    "cSpell.customDictionaries": {
+        "Package-dictionary": {
+            "addWords": true,
+            "name": "Package name & Function name",
+            "path": "${workspaceFolder}/.vscode/code-spell/package-term.txt",
+            "scope": "workspace"
+        }
+    },
+    "cSpell.ignorePaths": [
+        ".git/objects",
+        ".vscode",
+        "pom.xml"
+    ],
+    "css.format.maxPreserveNewLines": 4,
+    "css.format.spaceAroundSelectorSeparator": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+    },
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.tabSize": 4,
+    "editor.unicodeHighlight.includeStrings": false,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "prettier.bracketSameLine": true,
+    "prettier.printWidth": 120,
+    "prettier.singleAttributePerLine": false,
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": false
+}

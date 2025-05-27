@@ -1,0 +1,22 @@
+<svg
+  viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="logo-odysql"
+>
+  <!-- Mast -->
+  <rect x="95" y="40" width="5" height="120" fill="#ce661c" />
+  <!-- Sail -->
+  <polygon points="100,40 100,130 170,135" fill="#1a86ea" />
+  <!-- Hull -->
+  <path d="M30,170 L170,170 L150,150 Q100,160 50,150 Z" fill="#ce661c" />
+
+  <!-- Wave under boat -->
+  <path
+    d="M20,180 Q40,170 60,180 T100,180 T140,180 T180,180"
+    stroke="#1a86ea"
+    stroke-width="4"
+    fill="none"
+    stroke-linecap="round"
+  />
+</svg>
