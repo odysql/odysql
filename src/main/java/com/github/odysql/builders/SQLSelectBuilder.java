@@ -9,7 +9,7 @@ import com.github.odysql.models.SQLJoinData;
 import com.github.odysql.models.SQLParameter;
 
 /** The SQL builder that specified design for SELECT. */
-public class SQLSelectBuilder implements StatementGeneratable, Conditionable<SQLSelectBuilder> {
+public class SQLSelectBuilder implements SQLBuilder, Conditionable<SQLSelectBuilder> {
     /** The column name to be select */
     private List<String> selectCols = new ArrayList<>();
 
@@ -247,10 +247,14 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable<SQL
         return paramList;
     }
 
-    // ======================= Statement Generable ===================
+    // ================= SQL Builder Methods ===================
 
-    @Override
-    public String toSQL() {
+    /**
+     * Construct SQL string from builder.
+     * 
+     * @return constructed SQL, which is parameterized.
+     */
+    private String constructSQL() {
         StringBuilder builder = new StringBuilder();
 
         // WITH table if any
@@ -309,5 +313,16 @@ public class SQLSelectBuilder implements StatementGeneratable, Conditionable<SQL
 
         // Remove exceed space and Return final query
         return builder.toString().replace("  ", " ");
+    }
+
+    @Override
+    public String toSQL() {
+        return constructSQL();
+    }
+
+    @Override
+    public ParamSQL toParamSQL() {
+        String sql = constructSQL();
+        return new ParamSQL(sql, this.getParams());
     }
 }

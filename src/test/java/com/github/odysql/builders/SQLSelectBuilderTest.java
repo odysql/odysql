@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.odysql.helpers.PreparedStatementFiller;
 import com.github.odysql.models.SQLCondition;
 import com.github.odysql.models.SQLParameter;
 
@@ -23,12 +22,14 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps = builder.toParamSQL();
+
         assertEquals(
                 "SELECT DISTINCT field1, field2 FROM table1 "
                         + "INNER JOIN table2 ON table1.id = table2.id "
                         + "LEFT JOIN table3 ON table2.value = table3.value "
                         + "WHERE table1.id = 123 ORDER BY field1 LIMIT 1",
-                builder.toSQL());
+                ps.getPreparedSQL());
     }
 
     @Test
@@ -42,15 +43,17 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limitOffset(1, 10);
 
+        ParamSQL ps = builder.toParamSQL();
+
         assertEquals("SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 123 AND table1.name = 'abc' ORDER BY field1 LIMIT 1 OFFSET 10",
-                PreparedStatementFiller.asDebugSQL(builder.toSQL(), builder.getParams()));
+                ps.getDebugSQL());
 
         assertEquals("SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1 OFFSET 10",
-                builder.toSQL());
+                ps.getPreparedSQL());
 
         // -------------------------------------
 
@@ -67,15 +70,17 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps2 = builder2.toParamSQL();
+
         assertEquals("SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 123 AND table1.name = 'abc' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder2.toSQL(), builder2.getParams()));
+                ps2.getDebugSQL());
 
         assertEquals("SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder2.toSQL());
+                ps2.getPreparedSQL());
     }
 
     @Test
@@ -97,17 +102,19 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps = builder.toParamSQL();
+
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20 OFFSET 10) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder.toSQL());
+                ps.getPreparedSQL());
 
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20 OFFSET 10) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder.toSQL(), builder.getParams()));
+                ps.getDebugSQL());
 
         // ------------------------------------
 
@@ -128,17 +135,19 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps2 = builder2.toParamSQL();
+
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder2.toSQL());
+                ps2.getPreparedSQL());
 
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder2.toSQL(), builder2.getParams()));
+                ps2.getDebugSQL());
     }
 
     @Test
@@ -168,19 +177,21 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps = builder.toParamSQL();
+
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20), "
                 + "tmp2 AS (SELECT col_wq FROM w2 WHERE w2.name = ? LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder.toSQL());
+                ps.getPreparedSQL());
 
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20), "
                 + "tmp2 AS (SELECT col_wq FROM w2 WHERE w2.name = 'abc' LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder.toSQL(), builder.getParams()));
+                ps.getDebugSQL());
 
         // ----------------------------
 
@@ -209,19 +220,21 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps2 = builder2.toParamSQL();
+
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20), "
                 + "tmp2 AS (SELECT col_wq FROM w2 WHERE w2.name = ? LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder2.toSQL());
+                ps2.getPreparedSQL());
 
         assertEquals("WITH tmp AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20), "
                 + "tmp2 AS (SELECT col_wq FROM w2 WHERE w2.name = 'abc' LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder2.toSQL(), builder2.getParams()));
+                ps2.getDebugSQL());
     }
 
     @Test
@@ -251,13 +264,15 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps = builder.toParamSQL();
+
         assertEquals("WITH tmp2 AS ("
                 + "WITH tmp1 AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20) "
                 + "SELECT col_wq FROM w2 WHERE w2.name = ? LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder.toSQL());
+                ps.getPreparedSQL());
 
         assertEquals("WITH tmp2 AS ("
                 + "WITH tmp1 AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20) "
@@ -265,7 +280,7 @@ class SQLSelectBuilderTest {
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder.toSQL(), builder.getParams()));
+                ps.getDebugSQL());
 
         // ------------------------------------
         SQLSelectBuilder temp3 = new SQLSelectBuilder()
@@ -293,13 +308,15 @@ class SQLSelectBuilderTest {
                 .orderBy("field1")
                 .limit(1);
 
+        ParamSQL ps2 = builder2.toParamSQL();
+
         assertEquals("WITH tmp2 AS ("
                 + "WITH tmp1 AS (SELECT col_wq FROM w1 WHERE w1.id = ? LIMIT 20) "
                 + "SELECT col_wq FROM w2 WHERE w2.name = ? LIMIT 20) "
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = ? AND table1.name = ? ORDER BY field1 LIMIT 1",
-                builder2.toSQL());
+                ps2.getPreparedSQL());
 
         assertEquals("WITH tmp2 AS ("
                 + "WITH tmp1 AS (SELECT col_wq FROM w1 WHERE w1.id = 123 LIMIT 20) "
@@ -307,6 +324,6 @@ class SQLSelectBuilderTest {
                 + "SELECT DISTINCT field1, field2 FROM table1 "
                 + "LEFT JOIN table2 ON table1.id = table2.id "
                 + "WHERE table1.id = 456 AND table1.name = 'def' ORDER BY field1 LIMIT 1",
-                PreparedStatementFiller.asDebugSQL(builder2.toSQL(), builder2.getParams()));
+                ps2.getDebugSQL());
     }
 }
