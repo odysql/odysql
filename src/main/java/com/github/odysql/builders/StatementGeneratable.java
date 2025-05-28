@@ -118,7 +118,7 @@ interface StatementGeneratable {
      * 
      * @return complete SQL statement that not contain "?" character
      */
-    public default String getDebugSQL() {
+    public default String toDebugSQL() {
         return PreparedStatementFiller.asDebugSQL(this.toSQL(), this.getParams());
     }
 }
