@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.github.odysql.helpers.SQLTypesMapper;
@@ -79,6 +81,21 @@ public class SQLParameter {
     }
 
     /**
+     * Create a new SQL Parameter with given <code>LocalDate</code>, which will
+     * convert to <code>java.sql.Date</code> automatically.
+     * 
+     * @param date value of local date, can be <code>null</code>.
+     * @return SQL Parameter of given java.sql.Date value
+     */
+    public static SQLParameter of(LocalDate date) {
+        if (date == null) {
+            return new SQLParameter(Date.class, null);
+        }
+
+        return new SQLParameter(Date.class, Date.valueOf(date));
+    }
+
+    /**
      * Create a new SQL Parameter with given java.sql.Timestamp value.
      * 
      * @param timestamp value of timestamp, can be <code>null</code>
@@ -86,6 +103,21 @@ public class SQLParameter {
      */
     public static SQLParameter of(Timestamp timestamp) {
         return new SQLParameter(Timestamp.class, timestamp);
+    }
+
+    /**
+     * Create a new SQL Parameter with given <code>LocalDateTime</code>, which will
+     * convert to <code>java.sql.Timestamp</code> automatically.
+     * 
+     * @param dt local datetime value, can be <code>null</code>
+     * @return SQL Parameter of given java.sql.Timestamp value
+     */
+    public static SQLParameter of(LocalDateTime dt) {
+        if (dt == null) {
+            return new SQLParameter(Timestamp.class, null);
+        }
+
+        return new SQLParameter(Timestamp.class, Timestamp.valueOf(dt));
     }
 
     /**
