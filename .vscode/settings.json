@@ -21,22 +21,16 @@
         ".vscode",
         "pom.xml"
     ],
-    "css.format.maxPreserveNewLines": 4,
-    "css.format.spaceAroundSelectorSeparator": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": "always"
     },
-    "editor.detectIndentation": true,
+    "editor.detectIndentation": false,
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file",
     "editor.tabSize": 4,
     "editor.unicodeHighlight.includeStrings": false,
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.format.settings.url": ".vscode/java-formatter.xml",
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
-    ],
     "java.project.sourcePaths": [
         "src"
     ],
