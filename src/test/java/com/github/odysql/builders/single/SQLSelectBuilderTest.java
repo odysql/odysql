@@ -1,4 +1,4 @@
-package com.github.odysql.builders;
+package com.github.odysql.builders.single;
 
 import static org.junit.jupiter.api.Assertions.*;
 

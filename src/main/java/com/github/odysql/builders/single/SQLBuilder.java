@@ -1,4 +1,4 @@
-package com.github.odysql.builders;
+package com.github.odysql.builders.single;
 
 import java.util.List;
 
@@ -27,7 +27,8 @@ interface SQLBuilder {
     /**
      * Get parameterized SQL as string. Developer will lose easy access to create
      * prepared statement when compare to
-     * {@link com.github.odysql.builders.SQLBuilder#toParamSQL()}, use this will
+     * {@link com.github.odysql.builders.single.SQLBuilder#toParamSQL()}, use this
+     * will
      * caution.
      * 
      * @return parameterized SQL string

@@ -1,4 +1,4 @@
-package com.github.odysql.builders;
+package com.github.odysql.builders.single;
 
 import java.util.ArrayList;
 import java.util.List;

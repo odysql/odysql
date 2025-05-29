@@ -1,4 +1,4 @@
-package com.github.odysql.builders;
+package com.github.odysql.builders.single;
 
 import java.sql.Date;
 import java.sql.Timestamp;
