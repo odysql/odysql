@@ -5,7 +5,7 @@ import java.util.List;
 import com.github.odysql.models.SQLParameter;
 
 /** Interface for SQL builder pattern. */
-interface SQLBuilder {
+public interface SingleSQLBuildable {
 
     /**
      * Get ordered parameters list, which is the values that will be put into
@@ -27,9 +27,8 @@ interface SQLBuilder {
     /**
      * Get parameterized SQL as string. Developer will lose easy access to create
      * prepared statement when compare to
-     * {@link com.github.odysql.builders.single.SQLBuilder#toParamSQL()}, use this
-     * will
-     * caution.
+     * {@link com.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()},
+     * use this with caution.
      * 
      * @return parameterized SQL string
      */

@@ -56,7 +56,7 @@ import com.github.odysql.models.SQLParameter;
  * Please note that SQL constructed by this builder may be fail to run, as
  * this <b>should be checked by developer themselves</b>.
  */
-public class SQLInsertBuilder implements SQLBuilder {
+public class SQLInsertBuilder implements SingleSQLBuildable {
 
     /** Table name to insert records. */
     private String targetTable = "";
