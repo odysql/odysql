@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import com.github.odysql.helpers.SQLTypesMapper;
 
@@ -257,5 +258,25 @@ public class SQLParameter {
         }
 
         throw new IllegalStateException("Cannot apply sql parameter with type " + this.clazz + " to statement.");
+    }
+
+    // ============= Override ================
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof SQLParameter)) {
+            return false;
+        }
+
+        SQLParameter sQLParameter = (SQLParameter) o;
+        return Objects.equals(clazz, sQLParameter.clazz) && Objects.equals(value, sQLParameter.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clazz, value);
     }
 }
