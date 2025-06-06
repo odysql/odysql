@@ -188,8 +188,9 @@ public class SQLSelectBuilder implements SQLBuilder, Conditionable<SQLSelectBuil
     }
 
     /**
-     * Use <code>FETCH FIRST ? ROW ONLY</code> statement. This method SHOULD not be
-     * called more than once, or the result will be overwritten by latest call.
+     * Use <code>FETCH FIRST {@literal ?} ROW ONLY</code> statement. This method
+     * SHOULD not be called more than once, or the result will be overwritten by
+     * latest call.
      * 
      * @param rowCount the number of row to be fetched
      * @return this
