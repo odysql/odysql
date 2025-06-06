@@ -33,9 +33,11 @@ This library is completely opinionated as:
 ## FAQ
 
 **How about my object mapper?**
+
 Come on, do it yourself.
 
 **Is this an ORM?**
+
 No. Personally, I hate ORM that hide too many details from me. It should be at least 2 separate library:
 
 -   SQL builder
@@ -49,15 +51,19 @@ This is SQL builder only, or you can call it `PrepareStatement` builder & filler
 2. It take effort to ensure it works. This library is just non-commercial project
 
 **Why not `SELECT *`**
+
 Please google, this has been state by other people that is much smarter.
 
 **Why not `RIGHT JOIN`**
+
 It can always be rewrite to better `LEFT JOIN`.
 
 **Why encourage CTE instead of sub-query**
+
 To ensure readability, too many sub-query will increase complexity to read and debug.
 CTE is much better that ensure all part can be easily tested separately.
 Modern database has similar optimization approach on CTE and subquery.
 
 **It is so ugly.**
+
 Thanks. But I think it is better than Java original approach.
