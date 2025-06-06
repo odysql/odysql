@@ -31,10 +31,12 @@ import com.github.odysql.models.SQLParameter;
  * int totalAffected = batch.executeWith(conn);
  * 
  * // Get debug log
- * List<String> sqlExecuted = batch.getDebugSQL();
+ * List&lt;String&gt; sqlExecuted = batch.getDebugSQL();
  * </pre>
  * 
  * </blockquote>
+ * 
+ * @param <DataT> Data type to be insert
  */
 public class SQLBatchInsertRunner<DataT> {
     /**
@@ -162,7 +164,7 @@ public class SQLBatchInsertRunner<DataT> {
      * 
      * @param conn connection that used to generate prepared statement
      * @return total affected row.
-     * @throws SQLException
+     * @throws SQLException when failed to perform insert
      */
     public int executeWith(Connection conn) throws SQLException {
         this.debugSQL.clear();

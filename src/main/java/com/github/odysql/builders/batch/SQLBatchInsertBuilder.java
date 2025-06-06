@@ -29,6 +29,8 @@ import java.util.List;
  * </pre>
  * 
  * </blockquote>
+ * 
+ * @param <DataT> Data type to be insert
  */
 public class SQLBatchInsertBuilder<DataT> {
     /** Table name to insert records. */
