@@ -1,7 +1,9 @@
 package com.github.odysql.builders.single;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.odysql.helpers.NonNull;
 import com.github.odysql.models.SQLCondition;
@@ -35,10 +37,7 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
     private List<SQLParameter> conditionParam = new ArrayList<>();
 
     /** Stored query for WITH table syntax. */
-    private List<String> withTables = new ArrayList<>();
-
-    /** Condition parameters in WITH syntax. */
-    private List<SQLParameter> withParam = new ArrayList<>();
+    private LinkedHashMap<String, SQLSelectBuilder> withTables = new LinkedHashMap<>();
 
     /**
      * The primary table name, which is not the table to join. Developer should
@@ -212,12 +211,7 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
      * @return this
      */
     public SQLSelectBuilder with(String tableName, SQLSelectBuilder query) {
-        // Extract condition param from another builder to with param
-        this.withParam.addAll(query.withParam);
-        this.withParam.addAll(query.conditionParam);
-
-        // Put WITH statement before main query
-        this.withTables.add(String.format("%s AS (%s)", tableName, query.toSQL()));
+        this.withTables.put(tableName, query);
         return this;
     }
 
@@ -242,7 +236,12 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
     public List<SQLParameter> getParams() {
         // Get parameters list, with first, then condition
         List<SQLParameter> paramList = new ArrayList<>();
-        paramList.addAll(withParam);
+
+        // Get all WITH statement parameters
+        for (SQLSelectBuilder with : this.withTables.values()) {
+            paramList.addAll(with.getParams());
+        }
+
         paramList.addAll(conditionParam);
 
         return paramList;
@@ -261,7 +260,13 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
         // WITH table if any
         if (!this.withTables.isEmpty()) {
             builder.append("WITH ");
-            builder.append(String.join(", ", withTables));
+
+            List<String> withList = new ArrayList<>();
+            for (Map.Entry<String, SQLSelectBuilder> entry : this.withTables.entrySet()) {
+                withList.add(String.format("%s AS (%s)", entry.getKey(), entry.getValue().toSQL()));
+            }
+
+            builder.append(String.join(", ", withList));
             builder.append(" ");
         }
 
