@@ -35,11 +35,16 @@ class SQLSelectBuilderTest {
     @Test
     void testBuilderPrepare() {
         SQLSelectBuilder builder = new SQLSelectBuilder()
-                .select("field1").select("field2").distinct()
+                .select("field1")
+                .select("field2")
+                .distinct()
                 .from("table1")
                 .leftJoin("table2", SQLCondition.create("table1.id = table2.id"))
-                .where(SQLCondition.create("table1.id = ? AND table1.name = ?"))
-                .param(SQLParameter.of(123), SQLParameter.of("abc"))
+                .where(SQLCondition
+                        .create("table1.id = ? AND table1.name = ?"))
+                .param(
+                        SQLParameter.of(123),
+                        SQLParameter.of("abc"))
                 .orderBy("field1")
                 .limitOffset(1, 10);
 
@@ -58,7 +63,9 @@ class SQLSelectBuilderTest {
         // -------------------------------------
 
         SQLSelectBuilder builder2 = new SQLSelectBuilder()
-                .select("field1").select("field2").distinct()
+                .select("field1")
+                .select("field2")
+                .distinct()
                 .from("table1")
                 .leftJoin("table2", SQLCondition.create("table1.id = table2.id"))
                 .where(SQLCondition
@@ -85,16 +92,18 @@ class SQLSelectBuilderTest {
 
     @Test
     void testBuilderWith() {
-        SQLSelectBuilder temp = new SQLSelectBuilder()
-                .select("col_wq")
-                .from("w1")
-                .where(SQLCondition.create("w1.id = ?"))
-                .param(SQLParameter.of(123))
-                .limitOffset(20, 10);
-
         SQLSelectBuilder builder = new SQLSelectBuilder()
-                .with("tmp", temp)
-                .select("field1").select("field2").distinct()
+                .with("tmp", new SQLSelectBuilder()
+                        .select("col_wq")
+                        .from("w1")
+                        .where(SQLCondition.create("w1.id = ?"))
+                        .param(SQLParameter.of(123))
+                        .limitOffset(20, 10))
+
+                .select("field1")
+                .select("field2")
+                .distinct()
+
                 .from("table1")
                 .leftJoin("table2", SQLCondition.create("table1.id = table2.id"))
                 .where(SQLCondition.create("table1.id = ? AND table1.name = ?"))
@@ -119,24 +128,24 @@ class SQLSelectBuilderTest {
 
     @Test
     void testBuilderMultipleWith() {
-        SQLSelectBuilder temp = new SQLSelectBuilder()
-                .select("col_wq")
-                .from("w1")
-                .where(SQLCondition.create("w1.id = ?"))
-                .param(SQLParameter.of(123))
-                .limit(20);
-
-        SQLSelectBuilder temp2 = new SQLSelectBuilder()
-                .select("col_wq")
-                .from("w2")
-                .where(SQLCondition.create("w2.name = ?"))
-                .param(SQLParameter.of("abc"))
-                .limit(20);
-
         SQLSelectBuilder builder = new SQLSelectBuilder()
-                .with("tmp", temp)
-                .with("tmp2", temp2)
-                .select("field1").select("field2").distinct()
+                .with("tmp", new SQLSelectBuilder()
+                        .select("col_wq")
+                        .from("w1")
+                        .where(SQLCondition.create("w1.id = ?"))
+                        .param(SQLParameter.of(123))
+                        .limit(20))
+
+                .with("tmp2", new SQLSelectBuilder()
+                        .select("col_wq")
+                        .from("w2")
+                        .where(SQLCondition.create("w2.name = ?"))
+                        .param(SQLParameter.of("abc"))
+                        .limit(20))
+
+                .select("field1")
+                .select("field2")
+                .distinct()
                 .from("table1")
                 .leftJoin("table2", SQLCondition.create("table1.id = table2.id"))
                 .where(SQLCondition.create("table1.id = ? AND table1.name = ?"))
@@ -163,24 +172,24 @@ class SQLSelectBuilderTest {
 
     @Test
     void testBuilderNestedWith() {
-        SQLSelectBuilder temp1 = new SQLSelectBuilder()
-                .select("col_wq")
-                .from("w1")
-                .where(SQLCondition.create("w1.id = ?"))
-                .param(SQLParameter.of(123))
-                .limit(20);
-
-        SQLSelectBuilder temp2 = new SQLSelectBuilder()
-                .with("tmp1", temp1)
-                .select("col_wq")
-                .from("w2")
-                .where(SQLCondition.create("w2.name = ?"))
-                .param(SQLParameter.of("abc"))
-                .limit(20);
-
         SQLSelectBuilder builder = new SQLSelectBuilder()
-                .with("tmp2", temp2)
-                .select("field1").select("field2").distinct()
+                .with("tmp2", new SQLSelectBuilder()
+                        .with("tmp1", new SQLSelectBuilder()
+                                .select("col_wq")
+                                .from("w1")
+                                .where(SQLCondition.create("w1.id = ?"))
+                                .param(SQLParameter.of(123))
+                                .limit(20))
+
+                        .select("col_wq")
+                        .from("w2")
+                        .where(SQLCondition.create("w2.name = ?"))
+                        .param(SQLParameter.of("abc"))
+                        .limit(20))
+
+                .select("field1")
+                .select("field2")
+                .distinct()
                 .from("table1")
                 .leftJoin("table2", SQLCondition.create("table1.id = table2.id"))
                 .where(SQLCondition.create("table1.id = ? AND table1.name = ?"))
