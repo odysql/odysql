@@ -11,14 +11,14 @@ import com.github.odysql.helpers.PreparedStatementFiller;
 import com.github.odysql.models.SQLParameter;
 
 /**
- * Object that provide support to bulk insert data.
+ * Runner that provide support to bulk insert data.
  * <p>
  * Example to use is like
  * <blockquote>
  * 
  * <pre>
  * // Only created by builders
- * BatchInsertSQL&lt;MyData&gt; batch = builder.toBatchSQL();
+ * SQLBatchInsertRunner&lt;MyData&gt; batch = builder.toBatchRunner();
  * 
  * // Config
  * batch.setMaxBatchSize(2000); // Batch size
@@ -36,7 +36,7 @@ import com.github.odysql.models.SQLParameter;
  * 
  * </blockquote>
  */
-public class BatchInsertSQL<DataT> {
+public class SQLBatchInsertRunner<DataT> {
     /**
      * The base part of SQL, e.g.
      * <code>INSERT INTO my_table (column1, column2) VALUES</code>.
@@ -75,14 +75,14 @@ public class BatchInsertSQL<DataT> {
     private List<String> debugSQL = new ArrayList<>();
 
     /**
-     * Create new BatchInsertSQL object.
+     * Create new SQLBatchInsertRunner object.
      * 
      * @param baseSQL    base part of SQL
      * @param paramSQL   parameter part ('?' characters) of SQL
      * @param retrievers functions to retrieve SQL parameter from data, order
      *                   dependent
      */
-    BatchInsertSQL(String baseSQL, String paramSQL, List<SQLParameterRetriever<DataT>> retrievers) {
+    SQLBatchInsertRunner(String baseSQL, String paramSQL, List<SQLParameterRetriever<DataT>> retrievers) {
         this.basePartSQL = baseSQL;
         this.paramPartSQL = paramSQL;
         this.preparedSQL = baseSQL + " " + paramSQL;
@@ -95,7 +95,7 @@ public class BatchInsertSQL<DataT> {
      * @param data data to be inserted
      * @return this
      */
-    public BatchInsertSQL<DataT> setData(List<DataT> data) {
+    public SQLBatchInsertRunner<DataT> setData(List<DataT> data) {
         this.data = data;
         return this;
     }
@@ -109,7 +109,7 @@ public class BatchInsertSQL<DataT> {
      * @return this
      * @throws IllegalArgumentException when maxBatchSize is &le; 0
      */
-    public BatchInsertSQL<DataT> setMaxBatchSize(int maxBatchSize) throws IllegalArgumentException {
+    public SQLBatchInsertRunner<DataT> setMaxBatchSize(int maxBatchSize) throws IllegalArgumentException {
         if (maxBatchSize <= 0) {
             throw new IllegalArgumentException("batch size must be non-zero and positive.");
         }
@@ -127,7 +127,7 @@ public class BatchInsertSQL<DataT> {
      *                     reduce overhead.
      * @return this
      */
-    public BatchInsertSQL<DataT> setLogEnabled(boolean isLogEnabled) {
+    public SQLBatchInsertRunner<DataT> setLogEnabled(boolean isLogEnabled) {
         this.isLogEnabled = isLogEnabled;
         return this;
     }

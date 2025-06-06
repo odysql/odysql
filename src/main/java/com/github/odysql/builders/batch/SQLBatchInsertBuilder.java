@@ -22,7 +22,7 @@ import java.util.List;
  * String sql = builder.toSQL();
  * 
  * // Get Batch support SQL
- * BatchInsertSQL&lt;MyData&gt; batch = builder.toBatchSQL();
+ * SQLBatchInsertRunner&lt;MyData&gt; batch = builder.toBatchRunner();
  * 
  * // Execute batch
  * int totalAffected = batch.setData(myDataList).executeWith(conn);
@@ -168,14 +168,14 @@ public class SQLBatchInsertBuilder<DataT> {
      * @return object that support batch insert to database and logging in its
      *         method
      * @throws IllegalStateException when SQL builder is invalid to build SQL
-     * @see BatchInsertSQL
+     * @see SQLBatchInsertRunner
      */
-    public BatchInsertSQL<DataT> toBatchSQL() throws IllegalStateException {
+    public SQLBatchInsertRunner<DataT> toBatchRunner() throws IllegalStateException {
         if (!checkIfValid()) {
             throw new IllegalStateException("SQL builder is not correct");
         }
 
-        return new BatchInsertSQL<>(
+        return new SQLBatchInsertRunner<>(
                 this.toBasePartSQL(),
                 this.toParamPartSQL(),
                 new ArrayList<>(insertCols.values()));
