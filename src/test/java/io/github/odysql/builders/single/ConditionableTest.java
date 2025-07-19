@@ -1,6 +1,6 @@
 package io.github.odysql.builders.single;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import java.util.ArrayList;
 import java.util.List;
