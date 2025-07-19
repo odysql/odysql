@@ -1,6 +1,8 @@
 package io.github.odysql.models;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,49 @@ class SQLConditionTest {
         return list;
     }
 
+    @Test
     void testIsEmpty() {
         assertEquals(true, SQLCondition.isEmpty(null));
         assertEquals(true, SQLCondition.isEmpty(SQLCondition.create(" ")));
         assertEquals(true, SQLCondition.isEmpty(SQLCondition.create("")));
 
         assertEquals(false, SQLCondition.isEmpty(SQLCondition.create("col1 = ?")));
+    }
+
+    @Test
+    void testBracket() {
+        assertEquals("(col1 = 12)", SQLCondition.bracket(SQLCondition.create("col1 = 12")).asSQL());
+
+        // AND bracket, OR Bracket ----------------------------------------------------
+        assertEquals("col1 = 12 AND (col2 = '23' AND col3 = 'ABC')",
+                SQLCondition
+                        .create("col1 = 12")
+                        .andBracket(SQLCondition
+                                .create("col2 = '23'")
+                                .and("col3 = 'ABC'"))
+                        .asSQL());
+
+        assertEquals("col1 = 12 OR (col2 = '23' AND col3 = 'ABC')",
+                SQLCondition
+                        .create("col1 = 12")
+                        .orBracket(SQLCondition
+                                .create("col2 = '23'")
+                                .and("col3 = 'ABC'"))
+                        .asSQL());
+
+        // Nested AND bracket, OR Bracket ----------------------------------------------
+        assertEquals("col1 = 12 OR (col2 = '23' AND (col3 = 'ABC' AND col6 LIKE '%A%'))",
+                SQLCondition
+                        .create("col1 = 12")
+                        .orBracket(SQLCondition
+                                .create("col2 = '23'")
+                                .andBracket(SQLCondition
+                                        .create("col3 = 'ABC'")
+                                        .and(SQLCondition.pickByFlag(
+                                                false,
+                                                SQLCondition.create("col5 <> 100"),
+                                                SQLCondition.create("col6 LIKE '%A%'")))))
+                        .asSQL());
     }
 
     @Test

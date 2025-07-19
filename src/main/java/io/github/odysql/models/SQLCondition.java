@@ -297,6 +297,17 @@ public class SQLCondition implements SQLFragment {
     }
 
     /**
+     * Perform AND operation to condition with bracket surround. This is short hand
+     * for <code>SQLCondition.and(SQLCondition.bracket(condition))</code>.
+     * 
+     * @param condition another condition
+     * @return this
+     */
+    public SQLCondition andBracket(SQLCondition condition) {
+        return and(SQLCondition.bracket(condition));
+    }
+
+    /**
      * Perform OR operation to condition.
      * 
      * @param condition another condition
@@ -331,6 +342,17 @@ public class SQLCondition implements SQLFragment {
             this.sql = condition.sql;
             return this;
         }
+    }
+
+    /**
+     * Perform OR operation to condition with bracket surround. This is short hand
+     * for <code>SQLCondition.or(SQLCondition.bracket(condition))</code>.
+     * 
+     * @param condition another condition
+     * @return this
+     */
+    public SQLCondition orBracket(SQLCondition condition) {
+        return or(SQLCondition.bracket(condition));
     }
 
     // ============== Final SQL Part =================
