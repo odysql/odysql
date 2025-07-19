@@ -6,7 +6,7 @@
 
     <groupId>io.github.odysql</groupId>
     <artifactId>odysql</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>io.github.odysql:odysql</name>
