@@ -102,7 +102,7 @@ public class SQLUnionSelectBuilder implements SingleSQLBuildable {
 
             // Prevent out of index of UNION type list
             if (i < types.size()) {
-                sb.append(" " + types.get(i).asSQL() + " ");
+                sb.append(" ").append(types.get(i).asSQL()).append(" ");
             }
 
             i++;

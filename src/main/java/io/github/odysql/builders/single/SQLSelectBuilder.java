@@ -286,7 +286,7 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
         // JOIN
         if (!joinedTables.isEmpty()) {
             for (SQLJoinData item : joinedTables) {
-                builder.append(" " + item.asSQL());
+                builder.append(" ").append(item.asSQL());
             }
         }
 
