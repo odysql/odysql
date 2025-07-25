@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.odysql.helpers.SQLNonNullUtils;
+import io.github.odysql.internal.helpers.SQLNonNullUtils;
 import io.github.odysql.models.SQLCondition;
 import io.github.odysql.models.SQLJoinData;
 import io.github.odysql.models.SQLParameter;

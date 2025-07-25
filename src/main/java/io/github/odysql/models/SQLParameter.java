@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-import io.github.odysql.helpers.SQLTypesMapper;
+import io.github.odysql.internal.helpers.SQLTypesMapper;
 
 /** Class for store value and type, to help create prepared statements. */
 public class SQLParameter {

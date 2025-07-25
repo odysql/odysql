@@ -3,7 +3,7 @@ package io.github.odysql.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.odysql.helpers.SQLNonNullUtils;
+import io.github.odysql.internal.helpers.SQLNonNullUtils;
 
 /**
  * The class for holding condition of SQL query, which used in WHERE or ON

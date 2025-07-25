@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.odysql.helpers.PreparedStatementFiller;
+import io.github.odysql.internal.helpers.PreparedStatementFiller;
 import io.github.odysql.models.SQLParameter;
 
 /**

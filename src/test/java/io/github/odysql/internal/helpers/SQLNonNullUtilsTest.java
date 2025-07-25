@@ -1,4 +1,4 @@
-package io.github.odysql.helpers;
+package io.github.odysql.internal.helpers;
 
 import static org.junit.jupiter.api.Assertions.*;
 

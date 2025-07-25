@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import io.github.odysql.helpers.PreparedStatementFiller;
+import io.github.odysql.internal.helpers.PreparedStatementFiller;
 import io.github.odysql.models.SQLParameter;
 
 /** Container for completed SQL that ready to be prepared statement. */
