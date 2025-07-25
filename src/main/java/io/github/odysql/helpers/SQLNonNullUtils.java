@@ -6,9 +6,9 @@ import java.util.Collection;
  * The class that contains multiple static method, to prevent appear null
  * pointer exception.
  */
-public class NonNull {
+public class SQLNonNullUtils {
     /** Private constructor to hide public one. */
-    private NonNull() {
+    private SQLNonNullUtils() {
     }
 
     /**

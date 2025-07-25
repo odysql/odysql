@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.odysql.helpers.NonNull;
+import io.github.odysql.helpers.SQLNonNullUtils;
 import io.github.odysql.models.SQLCondition;
 import io.github.odysql.models.SQLJoinData;
 import io.github.odysql.models.SQLParameter;
@@ -74,7 +74,7 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
      * @throws IllegalArgumentException if column is placed with "*" character
      */
     public SQLSelectBuilder select(String column) {
-        column = NonNull.safeStr(column);
+        column = SQLNonNullUtils.safeStr(column);
 
         if ("*".equals(column)) {
             throw new IllegalArgumentException("'SELECT *' is not allowed.");

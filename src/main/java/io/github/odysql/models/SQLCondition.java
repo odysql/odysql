@@ -3,7 +3,7 @@ package io.github.odysql.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.odysql.helpers.NonNull;
+import io.github.odysql.helpers.SQLNonNullUtils;
 
 /**
  * The class for holding condition of SQL query, which used in WHERE or ON
@@ -138,7 +138,7 @@ public class SQLCondition implements SQLFragment {
      * @return this
      */
     public static <T> SQLCondition in(String columnName, List<T> values) throws IllegalArgumentException {
-        if (NonNull.isEmpty(values)) {
+        if (SQLNonNullUtils.isEmpty(values)) {
             throw new IllegalArgumentException("list cannot be empty.");
         }
 
@@ -177,7 +177,7 @@ public class SQLCondition implements SQLFragment {
      *                                  is empty
      */
     public static <T> SQLCondition notIn(String columnName, List<T> values) throws IllegalArgumentException {
-        if (NonNull.isEmpty(values)) {
+        if (SQLNonNullUtils.isEmpty(values)) {
             throw new IllegalArgumentException("list cannot be empty.");
         }
 
@@ -374,6 +374,6 @@ public class SQLCondition implements SQLFragment {
      * @return true if condition is actually empty or <code>null</code>.
      */
     public static final boolean isEmpty(SQLCondition cond) {
-        return cond == null || NonNull.isEmpty(cond.sql);
+        return cond == null || SQLNonNullUtils.isEmpty(cond.sql);
     }
 }
