@@ -1,4 +1,5 @@
 # odysql
+[![javadoc](https://javadoc.io/badge2/io.github.odysql/odysql/javadoc.svg)](https://javadoc.io/doc/io.github.odysql/odysql)
 
 Odysql is a opinionated dynamic SQL builder, which support Java 8+.
 
