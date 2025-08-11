@@ -34,6 +34,8 @@
     "java.project.sourcePaths": [
         "src"
     ],
+    "java.sources.organizeImports.starThreshold": 99,
+    "java.sources.organizeImports.staticStarThreshold": 99,
     "prettier.bracketSameLine": true,
     "prettier.printWidth": 120,
     "prettier.singleAttributePerLine": false,
