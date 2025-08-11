@@ -1,4 +1,5 @@
 # odysql
+
 [![javadoc](https://javadoc.io/badge2/io.github.odysql/odysql/javadoc.svg)](https://javadoc.io/doc/io.github.odysql/odysql) [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.odysql/odysql)](https://central.sonatype.com/artifact/io.github.odysql/odysql)
 
 Odysql is a opinionated dynamic SQL builder, which support Java 8+.
@@ -30,6 +31,22 @@ This library is completely opinionated as:
 -   [After JDK 15](examples/after_jdk15.md)
 -   [SELECT](examples/SELECT.md)
 -   [INSERT](examples/INSERT.md)
+
+## Development
+
+### Java runtime
+
+This project is require Java 21 or later when developing, but it will create a Java 8 compatible library.
+
+Developer should be careful on the compatibility, and prevent to use API not belong to java 8, e.g.
+
+-   `List.of(...)`
+-   `String.isBlank()`, `String.repeat(...)`
+-   `Stream.toList()`
+
+### Versioning
+
+This project will use semver.
 
 ## FAQ
 
