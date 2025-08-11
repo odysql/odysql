@@ -19,6 +19,8 @@ class SQLSelectBuilderTest {
                 .innerJoin("table2", SQLCondition.create("table1.id = table2.id"))
                 .leftJoin("table3", SQLCondition.create("table2.value = table3.value"))
                 .where(SQLCondition.create("table1.id = 123"))
+                .groupBy("field1")
+                .having(SQLCondition.create("COUNT(*) > 5"))
                 .orderBy("field1")
                 .limit(1);
 
@@ -28,7 +30,10 @@ class SQLSelectBuilderTest {
                 "SELECT DISTINCT field1, field2 FROM table1 "
                         + "INNER JOIN table2 ON table1.id = table2.id "
                         + "LEFT JOIN table3 ON table2.value = table3.value "
-                        + "WHERE table1.id = 123 ORDER BY field1 LIMIT 1",
+                        + "WHERE table1.id = 123 "
+                        + "GROUP BY field1 "
+                        + "HAVING COUNT(*) > 5 "
+                        + "ORDER BY field1 LIMIT 1",
                 ps.getPreparedSQL());
     }
 
