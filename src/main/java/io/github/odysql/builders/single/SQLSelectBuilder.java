@@ -33,6 +33,9 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
     /** The condition for WHERE clause. */
     private SQLCondition whereCondition = null;
 
+    /** values for HAVING clause. */
+    private SQLCondition havingCondition = null;
+
     /** Condition parameters. */
     private List<SQLParameter> conditionParam = new ArrayList<>();
 
@@ -215,6 +218,19 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
         return this;
     }
 
+    /**
+     * Use HAVING clause. Although it is allowed to doing query without GROUP BY,
+     * which is also builder designed, developer should always ensure its intent is
+     * clear.
+     * 
+     * @param condition Condition for having
+     * @return this
+     */
+    public SQLSelectBuilder having(SQLCondition condition) {
+        this.havingCondition = condition;
+        return this;
+    }
+
     // ======================= Condition -able =======================
 
     @Override
@@ -271,10 +287,11 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
         }
 
         // Select command
+        builder.append("SELECT ");
+
+        // DISTINCT
         if (this.isDistinct) {
-            builder.append("SELECT DISTINCT ");
-        } else {
-            builder.append("SELECT ");
+            builder.append("DISTINCT ");
         }
 
         // Column to be select
@@ -298,6 +315,11 @@ public class SQLSelectBuilder implements SingleSQLBuildable, Conditionable<SQLSe
         // GROUP BY
         if (!this.groupCols.isEmpty()) {
             builder.append(" GROUP BY " + String.join(", ", this.groupCols));
+        }
+
+        // HAVING
+        if (!SQLCondition.isEmpty(havingCondition)) {
+            builder.append(" HAVING " + havingCondition.asSQL());
         }
 
         // ORDER BY
