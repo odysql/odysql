@@ -28,18 +28,40 @@ public class PreparedStatementFiller {
      * @param params list of SQL parameters to inject into SQL
      * @return complete SQL statement that not contain "?" character; or
      *         <code>null</code> if sql is <code>null</code>
+     * @throws IllegalArgumentException when no. of "?" character is larger/smaller
+     *                                  than params size
      */
-    public static String asDebugSQL(String sql, List<SQLParameter> params) {
+    public static String asDebugSQL(String sql, List<SQLParameter> params) throws IllegalArgumentException {
         if (sql == null) {
             return null;
         }
 
-        // Loop through all parameters
-        for (SQLParameter param : params) {
-            // Replace question mark character
-            sql = sql.replaceFirst("\\?", param.toDebugSQL());
+        StringBuilder sb = new StringBuilder();
+        int paramsIdx = 0;
+
+        for (int i = 0; i < sql.length(); i++) {
+            char c = sql.charAt(i);
+
+            // Normal append if not question mark
+            if (c != '?') {
+                sb.append(c);
+                continue;
+            }
+
+            // Ensure parameter index not exceed parameters size
+            if (paramsIdx >= params.size()) {
+                throw new IllegalArgumentException("Placeholder and SQLParameter count is not matched");
+            }
+
+            // Append SQLParameter debug value instead of '?'
+            sb.append(params.get(paramsIdx).toDebugSQL());
+            paramsIdx++;
         }
 
-        return sql;
+        if (paramsIdx < params.size()) {
+            throw new IllegalArgumentException("Placeholder and SQLParameter count is not matched");
+        }
+
+        return sb.toString();
     }
 }
