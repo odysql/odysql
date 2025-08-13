@@ -3,6 +3,7 @@ package io.github.odysql.builders.single;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -32,6 +33,17 @@ public final class ParamSQL {
 
         // Run filler for prepared statement
         this.debugSQL = PreparedStatementFiller.asDebugSQL(sql, parameters);
+    }
+
+    /**
+     * Create a new <code>ParamSQL</code> by a parameterized SQL and its parameter.
+     * This function will create debug SQL automatically.
+     * 
+     * @param sql        parameterized SQL string
+     * @param parameters parameters
+     */
+    public ParamSQL(String sql, SQLParameter... parameters) {
+        this(sql, Arrays.asList(parameters));
     }
 
     /**
