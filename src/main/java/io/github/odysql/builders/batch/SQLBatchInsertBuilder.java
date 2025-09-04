@@ -8,8 +8,7 @@ import java.util.List;
  * SQL Builder for batch INSERT operation.
  * <p>
  * Please note this class has completely different design with
- * <code>SQLInsertBuilder</code>. Full example to use is like:
- * <blockquote>
+ * <code>SQLInsertBuilder</code>. Full example to use is like: <blockquote>
  * 
  * <pre>
  * SQLBatchInsertBuilder&lt;MyData&gt; builder = new SQLBatchInsertBuilder&lt;MyData&gt;()

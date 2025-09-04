@@ -15,13 +15,9 @@ import io.github.odysql.models.SQLParameter;
  * flexibility when construct query. Developer can add the SQL Statement in
  * order they wants, even their don't follow the order of SQL format.
  * <p>
- * Give an example of SQL statement of INSERT:
- * <blockquote>
- * INSERT INTO {tableSource} (col1, col2, col3) VALUES (val1, val2, val3)
- * </blockquote>
- * 
- * Then we can build the SQL Statement like this:
- * <blockquote>
+ * Give an example of SQL statement of INSERT: <blockquote> INSERT INTO
+ * {tableSource} (col1, col2, col3) VALUES (val1, val2, val3) </blockquote> Then
+ * we can build the SQL Statement like this: <blockquote>
  * 
  * <pre>
  * SQLInsertBuilder builder = new SQLInsertBuilder()
@@ -40,10 +36,8 @@ import io.github.odysql.models.SQLParameter;
  * }
  * </pre>
  * 
- * </blockquote>
- * If developer don't want to use <code>ParamSQL</code>, this builder also
- * support get SQL and its parameter by
- * <blockquote>
+ * </blockquote> If developer don't want to use <code>ParamSQL</code>, this
+ * builder also support get SQL and its parameter by <blockquote>
  * 
  * <pre>
  * // Get Raw SQL and parameters
@@ -51,10 +45,8 @@ import io.github.odysql.models.SQLParameter;
  * List&lt;SQLParameter&gt; params = builder.getParams();
  * </pre>
  * 
- * </blockquote>
- * 
- * Please note that SQL constructed by this builder may be fail to run, as
- * this <b>should be checked by developer themselves</b>.
+ * </blockquote> Please note that SQL constructed by this builder may be fail to
+ * run, as this <b>should be checked by developer themselves</b>.
  */
 public class SQLInsertBuilder implements SingleSQLBuildable {
 

@@ -13,8 +13,7 @@ import io.github.odysql.models.SQLParameter;
 /**
  * Runner that provide support to bulk insert data.
  * <p>
- * Example to use is like
- * <blockquote>
+ * Example to use is like <blockquote>
  * 
  * <pre>
  * // Only created by builders

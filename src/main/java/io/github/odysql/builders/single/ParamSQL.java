@@ -95,8 +95,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}
@@ -114,8 +114,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}.
@@ -139,8 +139,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}
@@ -157,8 +157,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}.
@@ -181,8 +181,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}
@@ -199,8 +199,8 @@ public final class ParamSQL {
     /**
      * Get a filled Prepared Statement with the value that already store in the
      * builder, with
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}
-     * used as SQL.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()} used
+     * as SQL.
      * <p>
      * This method is designed to use in try-with-resources, as a short-cut method
      * for {@link #fill(PreparedStatement)}.

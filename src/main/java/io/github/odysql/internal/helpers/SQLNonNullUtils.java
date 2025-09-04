@@ -41,11 +41,11 @@ public class SQLNonNullUtils {
     }
 
     /**
-     * Prevent the string value to be null and cause null pointer exception.
-     * Also it will remove the leading and trailing space of string.
+     * Prevent the string value to be null and cause null pointer exception. Also it
+     * will remove the leading and trailing space of string.
      * <p>
-     * It is commonly used like <code>rs.getString("Key")</code>, as It may
-     * return an empty value.
+     * It is commonly used like <code>rs.getString("Key")</code>, as It may return
+     * an empty value.
      *
      * @param str string that have possibility become null
      * @return empty string if str is null, otherwise return result of

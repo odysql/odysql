@@ -27,8 +27,8 @@ public interface SingleSQLBuildable {
     /**
      * Get parameterized SQL as string. Developer will lose easy access to create
      * prepared statement when compare to
-     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()},
-     * use this with caution.
+     * {@link io.github.odysql.builders.single.SingleSQLBuildable#toParamSQL()}, use
+     * this with caution.
      * 
      * @return parameterized SQL string
      */
