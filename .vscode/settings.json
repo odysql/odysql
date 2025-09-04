@@ -8,6 +8,9 @@
     "[sql]": {
         "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
     },
+    "[xml]": {
+        "editor.formatOnSave": false
+    },
     "cSpell.customDictionaries": {
         "Package-dictionary": {
             "addWords": true,
@@ -30,12 +33,13 @@
     "editor.tabSize": 4,
     "editor.unicodeHighlight.includeStrings": false,
     "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.profile": "",
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "java.project.sourcePaths": [
         "src"
     ],
     "java.sources.organizeImports.starThreshold": 99,
-    "java.sources.organizeImports.staticStarThreshold": 99,
+    "java.sources.organizeImports.staticStarThreshold": 4,
     "prettier.bracketSameLine": true,
     "prettier.printWidth": 120,
     "prettier.singleAttributePerLine": false,
