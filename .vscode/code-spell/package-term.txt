@@ -1,4 +1,5 @@
 # Dictionary Words For Package Name/Font
 Conditionable
 Generatable
+Hikari
 odysql

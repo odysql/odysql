@@ -5,27 +5,22 @@ import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 
 /**
- * Minimal interface for data source, which help developer to easily migrate
- * from their custom SQL connection class.
+ * Interface for data source classes that provide a database connection without
+ * proper connection management, i.e. the connection is most likely not managed
+ * by pool, and connection is keep opening for application usage.
  * <p>
  * Traditional, developer should use connection pool to manage SQL connections,
  * however, in some extreme case of legacy code, it may not use this concept.
  * This class will provide a minimal impact approach to reduce too complicated
- * code without call <code>getConnection</code> every time when use SQL
- * builders.
- * 
- * @see javax.sql.DataSource
- * @deprecated please consider use {@code NonClosingDataSource} instead, which
- *             has identical functionality.
+ * code without call {@code getConnection} every time when use SQL builders.
+ * <p>
+ * Please note that, for long term development, these legacy data source class
+ * should be replaced by a proper designed data source, e.g. {@code HikariCP}.
  */
-public interface MinimalDataSource extends NonClosingDataSource {
-
+public interface NonClosingDataSource {
     /**
      * Attempts to establish a connection with the data source that this
-     * {@code MinimalDataSource} object represents.
-     * <p>
-     * This method is same definition with
-     * {@link javax.sql.DataSource#getConnection()} method.
+     * {@code NonClosingDataSource} object represents.
      *
      * @return a connection to the data source
      * @throws SQLException        if a database access error occurs
@@ -33,7 +28,6 @@ public interface MinimalDataSource extends NonClosingDataSource {
      *                             value specified by the {@code setLoginTimeout}
      *                             method has been exceeded and has at least tried
      *                             to cancel the current database connection attempt
-     * @see javax.sql.DataSource#getConnection()
      */
     Connection getConnection() throws SQLException;
 }
