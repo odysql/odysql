@@ -272,7 +272,7 @@ public class SQLCondition implements SQLFragment {
             placeholders.add("?");
         }
 
-        return new SQLCondition(columnName + "NOT IN (" + String.join(",", placeholders) + ")");
+        return new SQLCondition(columnName + " NOT IN (" + String.join(",", placeholders) + ")");
     }
 
     /**
