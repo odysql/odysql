@@ -129,6 +129,9 @@ public class SQLCondition implements SQLFragment {
      * <p>
      * Please note that this function is NOT designed for prepared statement
      * placeholder <code>?</code>, all string will be quoted with <code>'</code>.
+     * <p>
+     * If developer want to use placeholder {@code ?} for safety (e.g. prevent SQL
+     * injection), use {@code inPlaceholders(String, int)} instead.
      * 
      * @param <T>        <code>Integer</code> or <code>String</code>
      * @param columnName the column name
@@ -136,6 +139,7 @@ public class SQLCondition implements SQLFragment {
      * @throws IllegalArgumentException when type is not integer or string, or list
      *                                  is empty
      * @return this
+     * @see #inPlaceholders(String, int)
      */
     public static <T> SQLCondition in(String columnName, List<T> values) throws IllegalArgumentException {
         if (SQLNonNullUtils.isEmpty(values)) {
@@ -168,6 +172,9 @@ public class SQLCondition implements SQLFragment {
      * <p>
      * Please note that this function is NOT designed for prepared statement
      * placeholder <code>?</code>, all string will be quoted with <code>'</code>.
+     * <p>
+     * If developer want to use placeholder {@code ?} for safety (e.g. prevent SQL
+     * injection), use {@code notInPlaceholders(String, int)} instead.
      * 
      * @param <T>        <code>Integer</code> or <code>String</code>
      * @param columnName the column name
@@ -175,6 +182,7 @@ public class SQLCondition implements SQLFragment {
      * @return this
      * @throws IllegalArgumentException when type is not integer or string, or list
      *                                  is empty
+     * @see #notInPlaceholders(String, int)
      */
     public static <T> SQLCondition notIn(String columnName, List<T> values) throws IllegalArgumentException {
         if (SQLNonNullUtils.isEmpty(values)) {
@@ -199,6 +207,72 @@ public class SQLCondition implements SQLFragment {
         }
 
         return new SQLCondition(String.format("%s NOT IN (%s)", columnName, String.join(",", quoted)));
+    }
+
+    /**
+     * Create a condition object with <code>IN (.., ..)</code> statement and
+     * placeholders. It is highly recommended to use this to replace unnecessary OR
+     * statement.
+     * <p>
+     * Please note that this function is designed for prepared statement placeholder
+     * <code>?</code> ONLY. Developer should set back parameter values when using
+     * condition in SQL builders.
+     * <p>
+     * If developer do not want to use any placeholder {@code ?}, e.g. value is
+     * hardcoded, use {@code in(String, List)} instead.
+     * 
+     * @param columnName the column name
+     * @param size       number of value inside IN statement
+     * @throws IllegalArgumentException when size is &le; 0
+     * @return this
+     * @see #in(String, List)
+     */
+    public static SQLCondition inPlaceholders(String columnName, int size) throws IllegalArgumentException {
+        // Ensure size is larger than zero
+        if (size <= 0) {
+            throw new IllegalArgumentException("size MUST be positive integer");
+        }
+
+        // Create string with concat ? placeholder
+        List<String> placeholders = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            placeholders.add("?");
+        }
+
+        return new SQLCondition(columnName + " IN (" + String.join(",", placeholders) + ")");
+    }
+
+    /**
+     * Create a condition object with <code>NOT IN (.., ..)</code> statement and
+     * placeholders. It is highly recommended to use this to replace unnecessary OR
+     * statement.
+     * <p>
+     * Please note that this function is designed for prepared statement placeholder
+     * <code>?</code> ONLY. Developer should set back parameter values when using
+     * condition in SQL builders.
+     * <p>
+     * If developer do not want to use any placeholder {@code ?}, e.g. value is
+     * hardcoded, use {@code notIn(String, List)} instead.
+     * 
+     * @param columnName the column name
+     * @param size       number of value inside IN statement
+     * @throws IllegalArgumentException when size is &le; 0
+     * @return this
+     * @see #notIn(String, List)
+     */
+    public static SQLCondition notInPlaceholders(String columnName, int size) throws IllegalArgumentException {
+        // Ensure size is larger than zero
+        if (size <= 0) {
+            throw new IllegalArgumentException("size MUST be positive integer");
+        }
+
+        // Create string with concat ? placeholder
+        List<String> placeholders = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            placeholders.add("?");
+        }
+
+        return new SQLCondition(columnName + "NOT IN (" + String.join(",", placeholders) + ")");
     }
 
     /**
