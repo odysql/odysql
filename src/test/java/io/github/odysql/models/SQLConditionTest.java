@@ -171,6 +171,52 @@ class SQLConditionTest {
     }
 
     @Test
+    void testInPlaceholders() {
+        assertEquals(
+                "col1 IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                SQLCondition.inPlaceholders("col1", 23).asSQL());
+
+        assertEquals(
+                "col1 IN (?,?,?)",
+                SQLCondition.inPlaceholders("col1", 3).asSQL());
+
+        assertEquals(
+                "col1 IN (?)",
+                SQLCondition.inPlaceholders("col1", 1).asSQL());
+
+        assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> SQLCondition.inPlaceholders("col1", 0));
+
+        assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> SQLCondition.inPlaceholders("col1", -1));
+    }
+
+    @Test
+    void testNotInPlaceholders() {
+        assertEquals(
+                "col1 NOT IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                SQLCondition.notInPlaceholders("col1", 23).asSQL());
+
+        assertEquals(
+                "col1 NOT IN (?,?,?)",
+                SQLCondition.notInPlaceholders("col1", 3).asSQL());
+
+        assertEquals(
+                "col1 NOT IN (?)",
+                SQLCondition.notInPlaceholders("col1", 1).asSQL());
+
+        assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> SQLCondition.notInPlaceholders("col1", 0));
+
+        assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> SQLCondition.notInPlaceholders("col1", -1));
+    }
+
+    @Test
     void testNotIn() {
         assertEquals(
                 "col1 NOT IN ('1','2','3')",
