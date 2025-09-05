@@ -11,6 +11,11 @@
     "[xml]": {
         "editor.formatOnSave": false
     },
+    "[yaml]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2,
+        "prettier.tabWidth": 2
+    },
     "cSpell.customDictionaries": {
         "Package-dictionary": {
             "addWords": true,
