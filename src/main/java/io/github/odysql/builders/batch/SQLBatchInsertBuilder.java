@@ -2,7 +2,6 @@ package io.github.odysql.builders.batch;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * SQL Builder for batch INSERT operation.
@@ -132,14 +131,17 @@ public class SQLBatchInsertBuilder<DataT> {
      * @return parameter part of SQL
      */
     private String toParamPartSQL() {
-        // Prepare list of question mark for later join
-        List<String> questionMarks = new ArrayList<>();
+        // Prepare question marks string
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < insertCols.keySet().size(); i++) {
-            questionMarks.add("?");
+            if (i > 0) {
+                sb.append(",");
+            }
+            sb.append("?");
         }
 
         // Question marks as value
-        return " (" + String.join(",", questionMarks) + ")";
+        return " (" + sb.toString() + ")";
     }
 
     /**
