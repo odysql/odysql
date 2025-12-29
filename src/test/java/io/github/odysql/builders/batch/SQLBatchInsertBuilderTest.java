@@ -1,6 +1,7 @@
 package io.github.odysql.builders.batch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +53,40 @@ class SQLBatchInsertBuilderTest {
                         .insert("col2", item -> SQLParameter.of(item.getColumn2()))
                         .insert("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
                         .toSQL());
+    }
+
+    @Test
+    void testOnDuplicateKeyUpdateSQL() {
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES (?,?,?) ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3)",
+                new SQLBatchInsertBuilder<MyData>()
+                        .into("my_table")
+                        .insert("col1", item -> SQLParameter.of(item.getColumn1()))
+                        .insert("col2", item -> SQLParameter.of(item.getColumn2()))
+                        .onDuplicateKeyUpdate("col2")
+                        .insert("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
+                        .onDuplicateKeyUpdate("col3")
+                        .toSQL());
+
+        // Short hand version
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES (?,?,?) ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3)",
+                new SQLBatchInsertBuilder<MyData>()
+                        .into("my_table")
+                        .insert("col1", item -> SQLParameter.of(item.getColumn1()))
+                        .insertOnDuplicateUpdate("col2", item -> SQLParameter.of(item.getColumn2()))
+                        .insertOnDuplicateUpdate("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
+                        .toSQL());
+
+        // Invalid builder
+        SQLBatchInsertBuilder<MyData> invalid = new SQLBatchInsertBuilder<MyData>()
+                .into("my_table")
+                .insertIgnore()
+                .insert("col1", item -> SQLParameter.of(item.getColumn1()))
+                .insert("col2", item -> SQLParameter.of(item.getColumn2()))
+                .onDuplicateKeyUpdate("col2");
+
+        assertThrows(IllegalStateException.class, invalid::toSQL);
     }
 
     @Test
