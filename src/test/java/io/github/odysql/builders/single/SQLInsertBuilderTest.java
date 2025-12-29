@@ -137,6 +137,26 @@ class SQLInsertBuilderTest {
     }
 
     @Test
+    void testUpsert() {
+        SQLInsertBuilder builder = new SQLInsertBuilder()
+                .into("some_db.some_table")
+                .insert("col1", "abc")
+                .onDuplicateKeyUpdate("col2", 456)
+
+                .insert("col2", 123)
+                .onDuplicateKeyUpdate("col3", "def");
+
+        ParamSQL ps = builder.toParamSQL();
+
+        assertEquals(
+                "INSERT INTO some_db.some_table (col1,col2) VALUES (?,?) ON DUPLICATE KEY UPDATE col2 = ?, col3 = ?",
+                ps.getPreparedSQL());
+        assertEquals(
+                "INSERT INTO some_db.some_table (col1,col2) VALUES ('abc',123) ON DUPLICATE KEY UPDATE col2 = 456, col3 = 'def'",
+                ps.getDebugSQL());
+    }
+
+    @Test
     void testIsValid() {
         // Test normal case
         SQLInsertBuilder b = new SQLInsertBuilder()
@@ -158,5 +178,14 @@ class SQLInsertBuilderTest {
                 .into("some_db.some_table");
         assertThrows(IllegalStateException.class, b2::toSQL);
         assertThrows(IllegalStateException.class, b2::toParamSQL);
+
+        // Test insert ignore with upsert
+        SQLInsertBuilder b3 = new SQLInsertBuilder()
+                .into("some_db.some_table")
+                .insertIgnore()
+                .insert("col1", "abc")
+                .onDuplicateKeyUpdate("col2", 123);
+        assertThrows(IllegalStateException.class, b3::toSQL);
+        assertThrows(IllegalStateException.class, b3::toParamSQL);
     }
 }

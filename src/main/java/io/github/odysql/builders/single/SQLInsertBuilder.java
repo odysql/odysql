@@ -54,8 +54,14 @@ public class SQLInsertBuilder implements SingleSQLBuildable {
     /** Table name to insert records. */
     private String targetTable = "";
 
-    /** Use syntax INSERT IGNORE. Only support MariaDB. */
+    /** Use syntax INSERT IGNORE. Only support MariaDB/MySQL. */
     private boolean isInsertIgnore = false;
+
+    /**
+     * Column name & value to be update when duplicate key, i.e.
+     * {@code ON DUPLICATE KEY UPDATE} . Only support MariaDB/MySQL.
+     */
+    private LinkedHashMap<String, SQLParameter> duplicateKeyUpdateCols = new LinkedHashMap<>();
 
     /** Column name & value to be inserted. */
     private LinkedHashMap<String, SQLParameter> insertCols = new LinkedHashMap<>();
@@ -207,6 +213,110 @@ public class SQLInsertBuilder implements SingleSQLBuildable {
         return this;
     }
 
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, Integer value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, Double value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, Long value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, String value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, Date value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, LocalDate value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, Timestamp value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Add a column that will be update when insert not able to run as duplicate
+     * key. Only work in MariaDB or MySQL.
+     * 
+     * @param colName column name to be update
+     * @param value   value to be update
+     * @return this
+     */
+    public SQLInsertBuilder onDuplicateKeyUpdate(String colName, LocalDateTime value) {
+        this.duplicateKeyUpdateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
     // ==================== SQL Build =======================
 
     /**
@@ -216,12 +326,25 @@ public class SQLInsertBuilder implements SingleSQLBuildable {
      * @return true if this builder result is valid, false otherwise
      */
     private boolean checkIfValid() {
-        return !targetTable.isEmpty() && !insertCols.isEmpty();
+        // Ensure target table defined and at least 1 insert column
+        if (targetTable.isEmpty() || insertCols.isEmpty()) {
+            return false;
+        }
+
+        // Ensure INSERT IGNORE not appear with UPSERT
+        if (isInsertIgnore || !duplicateKeyUpdateCols.isEmpty()) {
+            return isInsertIgnore ^ !duplicateKeyUpdateCols.isEmpty();
+        }
+
+        // Everything is ok
+        return true;
     }
 
     @Override
     public List<SQLParameter> getParams() {
-        return new ArrayList<>(insertCols.values());
+        List<SQLParameter> params = new ArrayList<>(insertCols.values());
+        params.addAll(duplicateKeyUpdateCols.values());
+        return params;
     }
 
     @Override
@@ -250,6 +373,17 @@ public class SQLInsertBuilder implements SingleSQLBuildable {
 
         // Question marks as value
         sb.append(" VALUES (" + String.join(",", questionMarks) + ")");
+
+        // ON DUPLICATE KEY UPDATE handling
+        if (!duplicateKeyUpdateCols.isEmpty()) {
+            sb.append(" ON DUPLICATE KEY UPDATE ");
+
+            List<String> upsertAssignments = new ArrayList<>();
+            for (String colName : duplicateKeyUpdateCols.keySet()) {
+                upsertAssignments.add(colName + " = ?");
+            }
+            sb.append(String.join(", ", upsertAssignments));
+        }
 
         // Remove exceed space and Return final query
         return sb.toString().trim().replace("  ", " ");
