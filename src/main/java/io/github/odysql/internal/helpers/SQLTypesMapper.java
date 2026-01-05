@@ -2,6 +2,7 @@ package io.github.odysql.internal.helpers;
 
 import static java.sql.Types.*;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -24,7 +25,7 @@ public class SQLTypesMapper {
             return true;
         }
 
-        if (clazz == String.class || clazz == Date.class || clazz == Timestamp.class) {
+        if (clazz == String.class || clazz == Date.class || clazz == Timestamp.class || clazz == BigDecimal.class) {
             return false;
         }
 
@@ -61,6 +62,10 @@ public class SQLTypesMapper {
 
         if (clazz == Timestamp.class) {
             return TIMESTAMP;
+        }
+
+        if (clazz == BigDecimal.class) {
+            return DECIMAL;
         }
 
         throw new IllegalArgumentException("Unsupported class");

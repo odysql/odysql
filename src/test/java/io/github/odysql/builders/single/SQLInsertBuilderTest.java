@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -45,19 +46,20 @@ class SQLInsertBuilderTest {
                 .insert("local_date", LocalDate.of(2024, 2, 28))
                 .insert("java_sql_timestamp",
                         Timestamp.valueOf(LocalDateTime.of(2024, 3, 20, 14, 23, 56)))
-                .insert("local_datetime", LocalDateTime.of(2024, 04, 27, 15, 11, 23));
+                .insert("local_datetime", LocalDateTime.of(2024, 04, 27, 15, 11, 23))
+                .insert("big_decimal", new java.math.BigDecimal("12345.6789"));
 
         ParamSQL ps = b.toParamSQL();
 
         assertEquals(
                 "INSERT INTO some_db.some_table "
-                        + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime) "
-                        + "VALUES (123,123.45,456,'HELLO','2024-01-31','2024-02-28','2024-03-20 14:23:56','2024-04-27 15:11:23')",
+                        + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime,big_decimal) "
+                        + "VALUES (123,123.45,456,'HELLO','2024-01-31','2024-02-28','2024-03-20 14:23:56','2024-04-27 15:11:23',12345.6789)",
                 ps.getDebugSQL());
 
         String expectedSQL = "INSERT INTO some_db.some_table "
-                + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime) "
-                + "VALUES (?,?,?,?,?,?,?,?)";
+                + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime,big_decimal) "
+                + "VALUES (?,?,?,?,?,?,?,?,?)";
         assertEquals(expectedSQL, ps.getPreparedSQL());
 
         // Test statement
@@ -86,19 +88,20 @@ class SQLInsertBuilderTest {
                 .insert("java_sql_date", (Date) null)
                 .insert("local_date", (LocalDate) null)
                 .insert("java_sql_timestamp", (Timestamp) null)
-                .insert("local_datetime", (LocalDateTime) null);
+                .insert("local_datetime", (LocalDateTime) null)
+                .insert("big_decimal", (BigDecimal) null);
 
         ParamSQL ps = b.toParamSQL();
 
         assertEquals(
                 "INSERT INTO some_db.some_table "
-                        + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime) "
-                        + "VALUES (NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",
+                        + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime,big_decimal) "
+                        + "VALUES (NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",
                 ps.getDebugSQL());
 
         String expectedSql = "INSERT INTO some_db.some_table "
-                + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime) "
-                + "VALUES (?,?,?,?,?,?,?,?)";
+                + "(int_value,double_value,long_value,string_value,java_sql_date,local_date,java_sql_timestamp,local_datetime,big_decimal) "
+                + "VALUES (?,?,?,?,?,?,?,?,?)";
         assertEquals(expectedSql, ps.getPreparedSQL());
 
         // Test statement
@@ -112,6 +115,7 @@ class SQLInsertBuilderTest {
         verify(mockStmt).setDate(6, null);
         verify(mockStmt).setTimestamp(7, null);
         verify(mockStmt).setTimestamp(8, null);
+        verify(mockStmt).setBigDecimal(9, null);
 
         assertEquals(mockStmt, stmt);
     }

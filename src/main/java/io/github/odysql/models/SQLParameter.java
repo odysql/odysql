@@ -1,5 +1,6 @@
 package io.github.odysql.models;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -122,6 +123,16 @@ public class SQLParameter {
     }
 
     /**
+     * Create a new SQL Parameter with given {@code BigDecimal} value.
+     * 
+     * @param decimal value of {@code BigDecimal}, can be {@code null}
+     * @return SQL Parameter of given {@code BigDecimal} value
+     */
+    public static SQLParameter of(BigDecimal decimal) {
+        return new SQLParameter(BigDecimal.class, decimal);
+    }
+
+    /**
      * Check if content of this parameter object is <code>null</code>.
      * 
      * @return true if object content is <code>null</code>, false otherwise
@@ -192,6 +203,10 @@ public class SQLParameter {
             return "'" + this.value + "'";
         }
 
+        if (this.clazz == BigDecimal.class) {
+            return ((BigDecimal) this.value).toPlainString();
+        }
+
         throw new IllegalArgumentException("Unsupported type detected");
     }
 
@@ -254,6 +269,11 @@ public class SQLParameter {
 
         if (this.clazz == String.class) {
             statement.setString(index, (String) this.value);
+            return statement;
+        }
+
+        if (this.clazz == BigDecimal.class) {
+            statement.setBigDecimal(index, (BigDecimal) this.value);
             return statement;
         }
 

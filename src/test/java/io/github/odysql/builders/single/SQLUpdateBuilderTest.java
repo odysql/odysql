@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -78,15 +79,17 @@ class SQLUpdateBuilderTest {
                 .update("local_date", LocalDate.of(2024, 2, 28))
                 .update("java_sql_timestamp", Timestamp.valueOf(LocalDateTime.of(2024, 3, 20, 14, 23, 56)))
                 .update("local_datetime", LocalDateTime.of(2024, 04, 27, 15, 11, 23))
+                .update("big_decimal", new BigDecimal("12345.6789"))
 
                 .toParamSQL();
 
         assertEquals("UPDATE some_db.some_table SET int_value=123,double_value=123.45,long_value=456,"
-                + "string_value='HELLO',java_sql_date='2024-01-31',local_date='2024-02-28',java_sql_timestamp='2024-03-20 14:23:56',local_datetime='2024-04-27 15:11:23' "
+                + "string_value='HELLO',java_sql_date='2024-01-31',local_date='2024-02-28',"
+                + "java_sql_timestamp='2024-03-20 14:23:56',local_datetime='2024-04-27 15:11:23',big_decimal=12345.6789 "
                 + "WHERE table_name.id = 123", ps.getDebugSQL());
 
         String expectedSQL = "UPDATE some_db.some_table SET int_value=?,double_value=?,long_value=?,"
-                + "string_value=?,java_sql_date=?,local_date=?,java_sql_timestamp=?,local_datetime=? "
+                + "string_value=?,java_sql_date=?,local_date=?,java_sql_timestamp=?,local_datetime=?,big_decimal=? "
                 + "WHERE table_name.id = ?";
         assertEquals(expectedSQL, ps.getPreparedSQL());
 
@@ -102,7 +105,8 @@ class SQLUpdateBuilderTest {
         verify(mockStmt).setDate(6, Date.valueOf("2024-02-28"));
         verify(mockStmt).setTimestamp(7, Timestamp.valueOf("2024-03-20 14:23:56"));
         verify(mockStmt).setTimestamp(8, Timestamp.valueOf("2024-04-27 15:11:23"));
-        verify(mockStmt).setInt(9, 123);
+        verify(mockStmt).setBigDecimal(9, new BigDecimal("12345.6789"));
+        verify(mockStmt).setInt(10, 123);
 
         // Assert
         assertEquals(mockStmt, stmt);
@@ -120,6 +124,8 @@ class SQLUpdateBuilderTest {
                 .update("local_date", (LocalDate) null)
                 .update("java_sql_timestamp", (Timestamp) null)
                 .update("local_datetime", (LocalDateTime) null)
+                .update("big_decimal", (BigDecimal) null)
+
                 .where(SQLCondition
                         .create("table_name.id = ?")
                         .and(SQLCondition.isNull("table_name.col2")))
@@ -127,11 +133,12 @@ class SQLUpdateBuilderTest {
                 .toParamSQL();
 
         assertEquals("UPDATE some_db.some_table SET int_value=NULL,double_value=NULL,long_value=NULL,"
-                + "string_value=NULL,java_sql_date=NULL,local_date=NULL,java_sql_timestamp=NULL,local_datetime=NULL "
+                + "string_value=NULL,java_sql_date=NULL,local_date=NULL,"
+                + "java_sql_timestamp=NULL,local_datetime=NULL,big_decimal=NULL "
                 + "WHERE table_name.id = 123 AND table_name.col2 IS NULL ", ps.getDebugSQL());
 
         String expectedSQL = "UPDATE some_db.some_table SET int_value=?,double_value=?,long_value=?,"
-                + "string_value=?,java_sql_date=?,local_date=?,java_sql_timestamp=?,local_datetime=? "
+                + "string_value=?,java_sql_date=?,local_date=?,java_sql_timestamp=?,local_datetime=?,big_decimal=? "
                 + "WHERE table_name.id = ? AND table_name.col2 IS NULL ";
         assertEquals(expectedSQL, ps.getPreparedSQL());
 
@@ -147,7 +154,8 @@ class SQLUpdateBuilderTest {
         verify(mockStmt).setDate(6, null);
         verify(mockStmt).setTimestamp(7, null);
         verify(mockStmt).setTimestamp(8, null);
-        verify(mockStmt).setInt(9, 123);
+        verify(mockStmt).setBigDecimal(9, null);
+        verify(mockStmt).setInt(10, 123);
 
         // Assert
         assertEquals(mockStmt, stmt);

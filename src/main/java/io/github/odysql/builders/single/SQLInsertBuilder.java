@@ -1,5 +1,6 @@
 package io.github.odysql.builders.single;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -167,6 +168,19 @@ public class SQLInsertBuilder implements SingleSQLBuildable {
      * @return this
      */
     public SQLInsertBuilder insert(String colName, LocalDateTime value) {
+        insertCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Insert specified columns, which is
+     * <code>INSERT INTO (colName) VALUES (value)</code>.
+     * 
+     * @param colName column name to insert
+     * @param value   value to be insert.
+     * @return this
+     */
+    public SQLInsertBuilder insert(String colName, BigDecimal value) {
         insertCols.put(colName, SQLParameter.of(value));
         return this;
     }

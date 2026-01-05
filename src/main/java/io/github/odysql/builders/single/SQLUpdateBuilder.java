@@ -1,5 +1,6 @@
 package io.github.odysql.builders.single;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -169,6 +170,18 @@ public class SQLUpdateBuilder implements Conditionable<SQLUpdateBuilder>, Single
      * @return this
      */
     public SQLUpdateBuilder update(String colName, LocalDateTime value) {
+        updateCols.put(colName, SQLParameter.of(value));
+        return this;
+    }
+
+    /**
+     * Update specified columns, which is <code>SET colName = value</code>.
+     * 
+     * @param colName column name to update
+     * @param value   value to be update.
+     * @return this
+     */
+    public SQLUpdateBuilder update(String colName, BigDecimal value) {
         updateCols.put(colName, SQLParameter.of(value));
         return this;
     }
