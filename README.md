@@ -23,6 +23,7 @@ This library is completely opinionated as:
     -   `java.sql.TimeStamp`
     -   `java.time.LocalDate`
     -   `java.time.LocalDateTime`
+    -   `java.math.BigDecimal`
 -   Create SQL string and fill prepared statement only, no ORM pattern
 -   Developer need to control `Connection` and `ResultSet` themselves
 
