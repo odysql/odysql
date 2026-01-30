@@ -1,6 +1,8 @@
 package io.github.odysql.internal.helpers;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.github.odysql.models.SQLParameter;
 
@@ -10,7 +12,22 @@ public class PreparedStatementFiller {
     }
 
     /**
-     * Get SQL for debugging, which is not for prepared statement.
+     * Normalize SQL by trim new lines and extra spaces.
+     * 
+     * @param sql the SQL to normalize
+     * @return normalized SQL
+     */
+    private static String normalizeSql(String sql) {
+        return Arrays.stream(sql.split("\\r?\\n"))
+                .map(String::trim)
+                .filter(line -> !line.isEmpty())
+                .collect(Collectors.joining(" "));
+    }
+
+    /**
+     * Get SQL for debugging, which is not for prepared statement. The SQL will
+     * pre-process to trim extra space and newline, to ensure it would be one-line
+     * SQL for easier logging.
      * <p>
      * Please note that this method is only for debugging purpose, the SQL returned
      * may not able to generate SQL that runnable in all SQL server, as date format
@@ -35,6 +52,9 @@ public class PreparedStatementFiller {
         if (sql == null) {
             return null;
         }
+
+        // Normalize SQL by trim new lines and extra spaces
+        sql = normalizeSql(sql);
 
         StringBuilder sb = new StringBuilder();
         int paramsIdx = 0;
