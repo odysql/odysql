@@ -88,11 +88,13 @@ public class SQLBatchInsertBuilder<DataT> {
      * This builder only support using both "abc" as value that used in both INSERT
      * and UPDATE.
      * 
-     * @param colName column name to be updated
+     * @param columnNames column name(s) to be updated
      * @return this
      */
-    public SQLBatchInsertBuilder<DataT> onDuplicateKeyUpdate(String colName) {
-        this.duplicateKeyUpdateCols.add(colName);
+    public SQLBatchInsertBuilder<DataT> onDuplicateKeyUpdate(String... columnNames) {
+        for (String column : columnNames) {
+            this.duplicateKeyUpdateCols.add(column);
+        }
         return this;
     }
 
@@ -108,7 +110,7 @@ public class SQLBatchInsertBuilder<DataT> {
      * <p>
      * This method is a short-hand for
      * {@link #insert(String, SQLParameterRetriever)} and
-     * {@link #onDuplicateKeyUpdate(String)}.
+     * {@link #onDuplicateKeyUpdate(String...)}.
      * 
      * @param colName   column name to be insert, or update when duplicate key occur
      * @param retriever lambda function to get <code>SQLParameter</code> from given

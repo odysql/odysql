@@ -68,6 +68,17 @@ class SQLBatchInsertBuilderTest {
                         .onDuplicateKeyUpdate("col3")
                         .toSQL());
 
+        // Multiple columns version
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES (?,?,?) ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3),col1=VALUES(col1)",
+                new SQLBatchInsertBuilder<MyData>()
+                        .into("my_table")
+                        .insert("col1", item -> SQLParameter.of(item.getColumn1()))
+                        .insert("col2", item -> SQLParameter.of(item.getColumn2()))
+                        .insert("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
+                        .onDuplicateKeyUpdate("col2", "col3", "col1")
+                        .toSQL());
+
         // Short hand version
         assertEquals(
                 "INSERT INTO my_table (col1,col2,col3) VALUES (?,?,?) ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3)",
