@@ -135,7 +135,7 @@ class SQLUpdateBuilderTest {
         assertEquals("UPDATE some_db.some_table SET int_value=NULL,double_value=NULL,long_value=NULL,"
                 + "string_value=NULL,java_sql_date=NULL,local_date=NULL,"
                 + "java_sql_timestamp=NULL,local_datetime=NULL,big_decimal=NULL "
-                + "WHERE table_name.id = 123 AND table_name.col2 IS NULL ", ps.getDebugSQL());
+                + "WHERE table_name.id = 123 AND table_name.col2 IS NULL", ps.getDebugSQL());
 
         String expectedSQL = "UPDATE some_db.some_table SET int_value=?,double_value=?,long_value=?,"
                 + "string_value=?,java_sql_date=?,local_date=?,java_sql_timestamp=?,local_datetime=?,big_decimal=? "
