@@ -9,6 +9,7 @@ import java.util.List;
 
 import io.github.odysql.internal.helpers.PreparedStatementFiller;
 import io.github.odysql.models.SQLParameter;
+import io.github.odysql.models.SQLParameterRetriever;
 
 /**
  * Runner that provide support to bulk insert data.

@@ -1,6 +1,4 @@
-package io.github.odysql.builders.batch;
-
-import io.github.odysql.models.SQLParameter;
+package io.github.odysql.models;
 
 /**
  * Function to get SQL parameter from given data.
