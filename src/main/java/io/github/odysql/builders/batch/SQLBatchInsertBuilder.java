@@ -213,6 +213,29 @@ public class SQLBatchInsertBuilder<DataT> {
     }
 
     /**
+     * Create after parameter part of SQL, i.e. ON DUPLICATE KEY UPDATE part.
+     * 
+     * @return SQL part that after parameter part
+     */
+    private String toAfterParamPartSQL() {
+        StringBuilder sb = new StringBuilder();
+
+        // ON DUPLICATE KEY UPDATE part
+        if (!duplicateKeyUpdateCols.isEmpty()) {
+            sb.append(" ON DUPLICATE KEY UPDATE ");
+
+            ArrayList<String> parts = new ArrayList<>();
+            for (String colName : duplicateKeyUpdateCols) {
+                parts.add(colName + "=VALUES(" + colName + ")");
+            }
+
+            sb.append(String.join(",", parts));
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * Create completed and parameterized SQL from this builder.
      * 
      * @return SQL string, parameterized
@@ -231,14 +254,7 @@ public class SQLBatchInsertBuilder<DataT> {
         sb.append(toParamPartSQL());
 
         // ON DUPLICATE KEY UPDATE part
-        if (!duplicateKeyUpdateCols.isEmpty()) {
-            sb.append(" ON DUPLICATE KEY UPDATE ");
-            ArrayList<String> parts = new ArrayList<>();
-            for (String colName : duplicateKeyUpdateCols) {
-                parts.add(colName + "=VALUES(" + colName + ")");
-            }
-            sb.append(String.join(",", parts));
-        }
+        sb.append(toAfterParamPartSQL());
 
         // remove exceed space
         return sb.toString().trim().replace("  ", " ");
@@ -265,6 +281,7 @@ public class SQLBatchInsertBuilder<DataT> {
         return new SQLBatchInsertRunner<>(
                 this.toBasePartSQL(),
                 this.toParamPartSQL(),
+                this.toAfterParamPartSQL(),
                 new ArrayList<>(insertCols.values()));
     }
 }

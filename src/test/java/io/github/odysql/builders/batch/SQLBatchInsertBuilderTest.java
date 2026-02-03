@@ -183,4 +183,49 @@ class SQLBatchInsertBuilderTest {
         o.verify(mockStmt).addBatch();
         o.verify(mockStmt).executeBatch();
     }
+
+    @Test
+    void testBatchRunnerWithOnDuplicateKeyUpdate() throws SQLException {
+        // Prepare dummy data
+        List<MyData> data = Arrays.asList(
+                new MyData("abc", 456, 'a'),
+                new MyData("def", 123, 'b'));
+
+        SQLBatchInsertRunner<MyData> runner = new SQLBatchInsertBuilder<MyData>()
+                .into("my_table")
+                .insert("col1", item -> SQLParameter.of(item.getColumn1()))
+                .insert("col2", item -> SQLParameter.of(item.getColumn2()))
+                .onDuplicateKeyUpdate("col2")
+                .insert("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
+                .onDuplicateKeyUpdate("col3")
+                .toBatchRunner()
+                .setData(data)
+                .setLogEnabled(true);
+
+        runner.executeWith(mockConn);
+
+        // Verify debug logs
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES('abc',456,'a'),('def',123,'b')  ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3)",
+                runner.getDebugSQL().get(0));
+
+        // Check behavior by mock
+        verify(mockConn)
+                .prepareStatement(
+                        "INSERT INTO my_table (col1,col2,col3) VALUES  (?,?,?)  ON DUPLICATE KEY UPDATE col2=VALUES(col2),col3=VALUES(col3)");
+
+        InOrder o = inOrder(mockStmt);
+
+        o.verify(mockStmt).setString(1, "abc");
+        o.verify(mockStmt).setInt(2, 456);
+        o.verify(mockStmt).setString(3, "a");
+        o.verify(mockStmt).addBatch();
+
+        o.verify(mockStmt).setString(1, "def");
+        o.verify(mockStmt).setInt(2, 123);
+        o.verify(mockStmt).setString(3, "b");
+        o.verify(mockStmt).addBatch();
+
+        o.verify(mockStmt).executeBatch();
+    }
 }

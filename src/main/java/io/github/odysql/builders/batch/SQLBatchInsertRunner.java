@@ -49,8 +49,13 @@ public class SQLBatchInsertRunner<DataT> {
     private final String paramPartSQL;
 
     /**
-     * Completed SQL that combined from <code>basePartSQL</code> and
-     * <code>paramPartSQL</code>.
+     * SQL part that is after parameter part, e.g. {@code ON DUPLICATE KEY UPDATE}.
+     */
+    private final String afterParamSQL;
+
+    /**
+     * Completed SQL that combined from <code>basePartSQL</code>,
+     * <code>paramPartSQL</code>, and <code>afterParamSQL</code>.
      */
     private final String preparedSQL;
 
@@ -79,16 +84,22 @@ public class SQLBatchInsertRunner<DataT> {
     /**
      * Create new SQLBatchInsertRunner object.
      * 
-     * @param baseSQL    base part of SQL
-     * @param paramSQL   parameter part ('?' characters) of SQL
-     * @param retrievers functions to retrieve SQL parameter from data, order
-     *                   dependent
+     * @param baseSQL       base part of SQL
+     * @param paramSQL      parameter part ('?' characters) of SQL
+     * @param afterParamSQL part of SQL that comes after parameter part, e.g.
+     *                      {@code ON DUPLICATE KEY UPDATE}
+     * @param retrievers    functions to retrieve SQL parameter from data, order
+     *                      dependent
      */
-    SQLBatchInsertRunner(String baseSQL, String paramSQL, List<SQLParameterRetriever<DataT>> retrievers) {
+    SQLBatchInsertRunner(String baseSQL, String paramSQL, String afterParamSQL,
+            List<SQLParameterRetriever<DataT>> retrievers) {
         this.basePartSQL = baseSQL;
         this.paramPartSQL = paramSQL;
-        this.preparedSQL = baseSQL + " " + paramSQL;
+        this.afterParamSQL = afterParamSQL;
         this.retrievers = retrievers;
+
+        String completeSQL = baseSQL + " " + paramSQL + " " + afterParamSQL;
+        this.preparedSQL = completeSQL.trim();
     }
 
     /**
@@ -156,7 +167,8 @@ public class SQLBatchInsertRunner<DataT> {
 
         // Add debug logs
         if (isLogEnabled) {
-            this.debugSQL.add(basePartSQL + String.join(",", paramRecord));
+            String completeSQL = basePartSQL + String.join(",", paramRecord) + " " + afterParamSQL;
+            this.debugSQL.add(completeSQL.trim());
         }
 
         return Arrays.stream(affected).sum();
