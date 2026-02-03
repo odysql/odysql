@@ -92,6 +92,15 @@ public class SQLBatchInsertRunner<DataT> {
     }
 
     /**
+     * Function to preview prepared SQL that will be used to insert data.
+     * 
+     * @return prepared SQL
+     */
+    public String preparedSQL() {
+        return this.preparedSQL;
+    }
+
+    /**
      * Set data to be insert to database.
      * 
      * @param data data to be inserted
