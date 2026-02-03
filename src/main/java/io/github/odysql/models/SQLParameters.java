@@ -4,12 +4,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
- * Utils to create list of {@code SQLParameter}, which ensure not using java
- * stream due to possible performance issue, and reduce boilerplate involved
+ * Utils to create list of {@code SQLParameter}, reduce boilerplate involved
  * when write convert functions.
+ * <p>
+ * This class only use loops to create {@code SQLParameter} list, not using java
+ * stream due to possible performance issue.
  * <p>
  * This utils class only provide method to convert list of common type, which
  * should enough for most real life usage. Some class like {@code java.sql.Date}
@@ -78,6 +82,30 @@ public class SQLParameters {
 
         for (String item : list) {
             result.add(SQLParameter.of(item));
+        }
+
+        return result;
+    }
+
+    /**
+     * <b>EXPERIMENTAL</b>. Create list of {@code SQLParameter} from collections of
+     * objects and its getter method. This method is useful when developer has list
+     * of custom object and want to create list of {@code SQLParameter} from one of
+     * its String field.
+     * <p>
+     * <i>This function only has string variant, as it act as experiment
+     * feature.</i>
+     * 
+     * @param <DataT> type of data object
+     * @param list    collection of data, support list and set
+     * @param getter  function to get String from data object
+     * @return list of {@code SQLParameter}
+     */
+    public static final <DataT> List<SQLParameter> strings(Collection<DataT> list, Function<DataT, String> getter) {
+        List<SQLParameter> result = new ArrayList<>();
+
+        for (DataT item : list) {
+            result.add(SQLParameter.of(getter.apply(item)));
         }
 
         return result;
