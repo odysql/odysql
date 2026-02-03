@@ -107,15 +107,22 @@ class SQLBatchInsertBuilderTest {
                 new MyData("abc", 456, 'a'),
                 new MyData("def", 123, 'b'));
 
-        int sum = new SQLBatchInsertBuilder<MyData>()
+        SQLBatchInsertRunner<MyData> runner = new SQLBatchInsertBuilder<MyData>()
                 .into("my_table")
                 .insert("col1", item -> SQLParameter.of(item.getColumn1()))
                 .insert("col2", item -> SQLParameter.of(item.getColumn2()))
                 .insert("col3", item -> SQLParameter.of(String.valueOf(item.getColumn3())))
                 .toBatchRunner()
-                .setData(data)
-                .executeWith(mockConn);
+                .setLogEnabled(true)
+                .setData(data);
+
+        int sum = runner.executeWith(mockConn);
         assertEquals(2, sum);
+
+        // Verify debug logs
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES('abc',456,'a'),('def',123,'b')",
+                runner.getDebugSQL().get(0));
 
         // Check behavior by mock
         verify(mockConn).prepareStatement("INSERT INTO my_table (col1,col2,col3) VALUES  (?,?,?)");
@@ -139,7 +146,7 @@ class SQLBatchInsertBuilderTest {
                 new MyData("abc", 456, 'a'),
                 new MyData("def", 123, 'b'));
 
-        new SQLBatchInsertBuilder<MyData>()
+        SQLBatchInsertRunner<MyData> runner = new SQLBatchInsertBuilder<MyData>()
                 .into("my_table")
                 .insert("col1", item -> SQLParameter.of(item.getColumn1()))
                 .insert("col2", item -> SQLParameter.of(item.getColumn2()))
@@ -147,7 +154,17 @@ class SQLBatchInsertBuilderTest {
                 .toBatchRunner()
                 .setData(data)
                 .setMaxBatchSize(1)
-                .executeWith(mockConn);
+                .setLogEnabled(true);
+
+        runner.executeWith(mockConn);
+
+        // Verify debug logs
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES('abc',456,'a')",
+                runner.getDebugSQL().get(0));
+        assertEquals(
+                "INSERT INTO my_table (col1,col2,col3) VALUES('def',123,'b')",
+                runner.getDebugSQL().get(1));
 
         // Check behavior by mock
         verify(mockConn).prepareStatement("INSERT INTO my_table (col1,col2,col3) VALUES  (?,?,?)");
